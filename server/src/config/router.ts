@@ -1,6 +1,8 @@
 import { Router, Request, Response } from "express";
 
-import registerRouter from "../api/register/register.router";
+import RegisterRouter from "../api/register/register.router";
+import LoginRouter  from "../api/Login/login.router";
+import MenuRouter from "../api/Menu/menu.router";
 
 export default class Routes {
   public router: Router;
@@ -19,7 +21,9 @@ export default class Routes {
     this.setMainRoute();
   }
   private setAllRoutes() {
-    this.app.use("/api/register", registerRouter);
+    this.app.use("/api/register", RegisterRouter);
+    this.app.use("/api/login", LoginRouter);
+    this.app.use("/api/menu", MenuRouter);
   }
 
   private setMainRoute() {

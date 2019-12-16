@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import User from './register.model';
+var passwordHash = require('password-hash');
 const _ = require('lodash');
 
 
@@ -38,6 +39,8 @@ export default class RegisterController {
               "assignedChatCount"
             ])
           );
+          user['password'] = passwordHash.generate('password123');
+          //user['password'] = hashedPassword;
           // const salt = await bcrypt.genSalt(10);
           //user.password = await bcrypt.hash(user.password, salt);
           await user.save();
