@@ -1,9 +1,14 @@
 import Express from "./config/express";
 import * as http from 'http';
-import * as config from './config/appConfig';
+import { appConfig } from './config/appConfig';
+var port = appConfig.get('port');
+var smpt = appConfig.get('smpt');
 
-var port = config.appConfig.get('port');
-var smpt = config.appConfig.get('smpt');
+if (!appConfig.get('PrivateKey')) {
+    console.error('FATAL ERROR: PrivateKey is not defined.');
+    process.exit(1);
+}
+
 Express.set('port', port);
 const server = http.createServer(Express);
 server.listen(port);

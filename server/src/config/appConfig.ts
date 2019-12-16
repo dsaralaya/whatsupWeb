@@ -1,7 +1,7 @@
 import convict from "convict";
 
 export const appConfig = convict({
-    secretKey: '122',
+    PrivateKey: '122',
     port: {
         doc: 'The port to bind.',
         default: 3000
@@ -16,9 +16,6 @@ export const appConfig = convict({
         fromEmail: 'd@gmail.com'
     },
     db: {
-        database: 'online_test',
-        username: 'root',
-        password: 'sa123',
-        port: '3306'
+        url: 'mongodb://localhost/whatsapp'
     }
 });

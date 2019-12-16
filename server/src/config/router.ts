@@ -1,40 +1,34 @@
-
 import { Router, Request, Response } from "express";
 
-// import  AnswersRouter from "../api/answers/answers.router";
-
+import registerRouter from "../api/register/register.router";
 
 export default class Routes {
-    public router: Router;
-    private app;
+  public router: Router;
+  private app;
 
-    constructor(app) {
+  constructor(app) {
+    // Set router
+    this.router = Router();
 
-        // Set router
-        this.router = Router();
+    // Set app
+    this.app = app;
 
-        // Set app
-        this.app = app;
+    // Set all routes
+    this.setAllRoutes();
 
-        // Set all routes
-        this.setAllRoutes();
+    this.setMainRoute();
+  }
+  private setAllRoutes() {
+    this.app.use("/api/register", registerRouter);
+  }
 
-        this.setMainRoute();
-    }
-    private setAllRoutes() {
-      
-        //this.app.use('/api/answers', AnswersRouter);
-      
-    }
+  private setMainRoute() {
+    this.app.route("/*").get(this.index);
+  }
 
-    private setMainRoute() {
-        // All other routes should redirect to the index.html
-        this.app.route('/*').get(this.index);
-    }
-
-    private index(req: Request, res: Response) {
-        res.json({
-            message: 'Hello Connecting!'
-        });
-    }
+  private index(req: Request, res: Response) {
+    res.json({
+      message: "Hello Connecting!"
+    });
+  }
 }
