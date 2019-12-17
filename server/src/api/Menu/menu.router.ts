@@ -1,5 +1,6 @@
 import { Router } from "express";
 import MenuController from "./menu.controller";
+import validateAuth from "../../common/validateAuth";
 
 export class MenuRouter {
   public router: Router;
@@ -10,11 +11,11 @@ export class MenuRouter {
 
   init() {
     var controller = new MenuController();
-    this.router.get("/list", controller.getall);
-    this.router.get("/show/:id", controller.getbyid);
-    this.router.post("/add", controller.create);
-    this.router.put("/update/:id", controller.update);
-    this.router.delete("/remove/:id", controller.delete);
+    this.router.get("/list", validateAuth, controller.getall);
+    this.router.get("/show/:id", validateAuth, controller.getbyid);
+    this.router.post("/add", validateAuth, controller.create);
+    this.router.put("/update/:id", validateAuth, controller.update);
+    this.router.delete("/remove/:id", validateAuth,controller.delete);
   }
 }
 
