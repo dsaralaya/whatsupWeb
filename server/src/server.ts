@@ -1,6 +1,8 @@
 import Express from "./config/express";
 import * as http from 'http';
+import socketIO from 'socket.io';
 import { appConfig } from './config/appConfig';
+import ChatController from "./api/Chat/chat.controller";
 var port = appConfig.get('port');
 var smpt = appConfig.get('smpt');
 
@@ -11,4 +13,14 @@ if (!appConfig.get('PrivateKey')) {
 
 Express.set('port', port);
 const server = http.createServer(Express);
-server.listen(port);
+
+let io = socketIO(server);
+io.on('connect', (socket: any) => {
+    console.log('Connected client on port %s.', this.port);
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
+io.attach(server);
+ server.listen(port);
+export default io;

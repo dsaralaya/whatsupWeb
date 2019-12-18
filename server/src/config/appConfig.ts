@@ -1,7 +1,8 @@
 import convict from "convict";
 
 export const appConfig = convict({
-    PrivateKey: '122',
+    PrivateKey:'11',
+    secretKey:'323',
     port: {
         doc: 'The port to bind.',
         default: 3000
@@ -17,5 +18,11 @@ export const appConfig = convict({
     },
     db: {
         url: 'mongodb://localhost/whatsapp'
+    },
+    intractiveAPI:{
+        client_id: 'cid5de59c223b075',
+        secret: 'sec5de59c223b07a4.218354795de59c223b0965.28363623',
+        device_id: '5defd8c2b9f70'
     }
+   
 });

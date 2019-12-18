@@ -8,18 +8,22 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { SharedModule } from './shared/shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DefaultComponent } from './shared/component/default/default.component';
-
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { ChatBoardComponent } from './chat-board/chat-board.component';
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    DefaultComponent
+    DefaultComponent,
+    ChatBoardComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SharedModule,
-    HttpClientModule
+    HttpClientModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [{
     provide: LocationStrategy,
