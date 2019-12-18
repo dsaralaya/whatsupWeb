@@ -3,14 +3,15 @@ import { Routes, RouterModule } from '@angular/router';
 import { DefaultComponent } from './shared/component/default/default.component';
 import { LoginComponent } from './login/login.component';
 import { ChatBoardComponent } from './chat-board/chat-board.component';
-
+import { DashboardComponent } from './admin/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: 'login',
-    pathMatch: 'full',
-  }, {
+    pathMatch: 'full'
+  },
+  {
     path: 'login',
     component: LoginComponent,
     data: {
@@ -23,7 +24,8 @@ const routes: Routes = [
     data: {
       title: 'chat'
     }
-  }, {
+  },
+  {
     path: '',
     component: DefaultComponent,
     data: {
@@ -32,13 +34,15 @@ const routes: Routes = [
     children: [
       {
         path: 'admin',
-        loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+        loadChildren: () =>
+          import('./admin/admin.module').then(m => m.AdminModule)
       }
     ]
-  }];
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

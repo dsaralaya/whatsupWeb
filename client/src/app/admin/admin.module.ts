@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AdminRoutingModule } from './admin.routing';
+import { AgGridModule } from 'ag-grid-angular';
 
 
 
@@ -12,7 +13,7 @@ import { AdminRoutingModule } from './admin.routing';
     DashboardComponent,
   ],
   imports: [
-    CommonModule, AdminRoutingModule
+    CommonModule, AdminRoutingModule, AgGridModule.withComponents([])
   ]
 })
 export class AdminModule { }

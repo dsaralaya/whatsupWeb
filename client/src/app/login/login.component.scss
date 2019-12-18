@@ -1,20 +1,46 @@
-body {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-align: center;
-    align-items: center;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    background-color: #f5f5f5;
-  }
-  
-  .form-signin {
-    width: 100%;
-    max-width: 330px;
-    padding: 15px;
-    margin: auto;
-  }
-  img {
-    vertical-align: middle;
-    border-style: none;
+.img {
+  background-image: url("/assets/images/login-background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.row {
+  padding-top: 9rem !important;
+  padding-bottom: 9rem !important;
+}
+
+.loginBtn {
+  background-color: black;
+  color: white;
+}
+
+.loginBtn:hover {
+  background-color: black;
+  color: white;
+  opacity: 0.8;
+}
+
+
+.card-signin {
+  border: 0;
+  border-radius: 1rem;
+}
+
+.card-signin .card-title {
+  margin-bottom: 2rem;
+  font-weight: 300;
+  font-size: 1.5rem;
+}
+
+.padding {
+  padding-left: 80px;
+}
+
+.card-signin .card-body {
+  background-color: snow;
+  border-radius: 20px;
+}
+
+.form-signin {
+  width: 100%;
 }

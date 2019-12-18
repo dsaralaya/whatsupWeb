@@ -10,13 +10,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { DefaultComponent } from './shared/component/default/default.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { ChatBoardComponent } from './chat-board/chat-board.component';
+import { FieldErrorMessageComponent } from './shared/component/field-error-message/field-error-message.component';
+
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DefaultComponent,
-    ChatBoardComponent
+    ChatBoardComponent,
+    FieldErrorMessageComponent
   ],
   imports: [
     BrowserModule,
