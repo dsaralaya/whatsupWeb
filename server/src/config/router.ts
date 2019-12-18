@@ -3,6 +3,8 @@ import { Router, Request, Response } from "express";
 import RegisterRouter from "../api/register/register.router";
 import LoginRouter  from "../api/Login/login.router";
 import MenuRouter from "../api/Menu/menu.router";
+import ChatHistoryRouter from "../api/ChatHistory/chatHistory.router";
+import ImageHistoryRouter from "../api/ImageHistory/imageHistory.router";
 
 export default class Routes {
   public router: Router;
@@ -24,6 +26,8 @@ export default class Routes {
     this.app.use("/api/register", RegisterRouter);
     this.app.use("/api/login", LoginRouter);
     this.app.use("/api/menu", MenuRouter);
+    this.app.use("/api/chathistory", ChatHistoryRouter);
+    this.app.use("/api/imagehistory", ImageHistoryRouter);
   }
 
   private setMainRoute() {
