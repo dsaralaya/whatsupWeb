@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 
-import RegisterRouter from "../api/register/register.router";
+import RegisterRouter from "../api/Register/register.router";
 import LoginRouter  from "../api/Login/login.router";
 import MenuRouter from "../api/Menu/menu.router";
 import ChatHistoryRouter from "../api/ChatHistory/chatHistory.router";
