@@ -140,3 +140,27 @@
 .dropdown-toggle::after{
 display:none;
 }
+.fileupload,.close{
+	cursor: pointer;
+}
+.imgupper{
+  background: #ccc;
+    padding-bottom: 2px;
+    width: 100%;
+    /* background: #fff; */
+   background: rgb(242, 242, 242);
+   .fa-paper-plane{
+	   font-size: 21px;
+   }
+}
+.imginner{
+margin-left: 8%;
+    background: #fff;
+    width: 70%;
+    padding: 10px;
+    border-radius: 10px 10px;
+    /* margin: 10px 0px; */
+    margin-top: 5px;
+	margin-bottom: 5px;
+	
+}

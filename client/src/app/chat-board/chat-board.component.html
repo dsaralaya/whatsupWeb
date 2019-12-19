@@ -8,11 +8,11 @@
                     onclick="showProfileSettings()" id="display-pic" src="/assets/images/user-icons/man-0.png">
                 <div class="text-white font-weight-bold" id="username">Me</div>
                 <div class="nav-item dropdown ml-auto">
-                    <a class="nav-link dropdown-toggle" (click)="toggle=!toggle" data-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true"
-                        aria-expanded="false"><i class="fas fa-ellipsis-v text-white"></i></a>
+                    <a class="nav-link dropdown-toggle" (click)="toggle=!toggle" data-toggle="dropdown" href="javascript:void(0)"
+                        role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v text-white"></i></a>
                     <div *ngIf="toggle" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
                         style="position: absolute; transform: translate3d(38px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
-                
+
                         <a class="dropdown-item" href="#">Log Out</a>
                     </div>
                 </div>
@@ -20,8 +20,9 @@
 
             <!-- Chat List -->
             <div class="row" id="chat-list" style="overflow:auto;">
-                <div  *ngFor="let item of chatbox" class="chat-list-item d-flex flex-row w-100 p-2 border-bottom {{item.sender==activatedSender?'active':''}}"
-                    (click)="getMessages(item)" >
+                <div *ngFor="let item of chatbox"
+                    class="chat-list-item d-flex flex-row w-100 p-2 border-bottom {{item.sender==activatedSender?'active':''}}"
+                    (click)="getMessages(item)">
                     <img src="{{item.img}}" alt="Profile Photo" class="img-fluid rounded-circle mr-3" style="height:50px;">
                     <div class="w-50  mt-2">
                         <div class="name">{{item.sender}}</div>
@@ -70,17 +71,17 @@
             <!-- Navbar -->
             <div class="row d-flex flex-row align-items-center p-2 m-0 w-100" id="navbar">
                 <div class="d-block d-sm-none">
-                    <i class="fas fa-arrow-left p-2 mr-2 text-white" style="font-size: 1.5rem; cursor: pointer;"
-                       ></i>
+                    <i class="fas fa-arrow-left p-2 mr-2 text-white" style="font-size: 1.5rem; cursor: pointer;"></i>
                 </div>
-               <img src="{{activatedSenderImg}}" alt="Profile Photo" class="img-fluid rounded-circle mr-2"
-                        style="height:50px;" id="pic">
+                <img src="{{activatedSenderImg}}" alt="Profile Photo" class="img-fluid rounded-circle mr-2" style="height:50px;" id="pic">
                 <div class="d-flex flex-column">
                     <div class="text-white font-weight-bold" id="name">{{activatedSender}}</div>
-                  
+
                 </div>
                 <div class="d-flex flex-row align-items-center ml-auto">
-                    <a href="#"><i class="fas fa-paperclip mx-3 text-white d-none d-md-block"></i></a>
+                    <label class="fileupload"><i class="fas fa-paperclip mx-3 text-white d-none d-md-block"></i>
+                        <input #imageInput type="file" class="d-none" accept="image/*" (change)="processFile(imageInput)">
+                    </label>
                 </div>
             </div>
 
@@ -88,7 +89,7 @@
             <div class="d-flex flex-column" id="messages">
 
                 <ng-container *ngFor="let item of messageList">
-                   
+
                     <div *ngIf="!item.from_me" class="align-self-start p-1 my-1 mx-3 rounded bg-white shadow-sm message-item">
                         <div class="small font-weight-bold text-primary">
                             {{item.sdr_rcv}}
@@ -102,12 +103,16 @@
                         </div>
                     </div>
 
-                    <div  *ngIf="item.from_me"class="align-self-end self p-1 my-1 mx-3 rounded bg-white shadow-sm message-item">
+                    <div *ngIf="item.from_me" class="align-self-end self p-1 my-1 mx-3 rounded bg-white shadow-sm message-item">
                         <div class="d-flex flex-row">
-                            <div class="body m-1 mr-2">{{item.message}}</div>
+                            <div class="body m-1 mr-2" *ngIf="item.type==='text'">{{item.message}}</div>
+                            <div class="body m-1 mr-2" *ngIf="item.type==='image'">
+                                <img src="{{item.path}}" width="50px">
+                            </div>
                             <div class="time ml-auto small text-right flex-shrink-0 align-self-end text-muted" style="width:75px;">
                                 {{item.date | date:'h:mm a'}}
-                                <i class="fas fa-check-circle"></i>
+                                <i *ngIf="item.status==='success'" class="fas fa-check-circle"></i>
+                                <i *ngIf="item.status==='pending'" class="far fa-square"></i>
                             </div>
                         </div>
                     </div>
@@ -115,12 +120,25 @@
             </div>
 
             <!-- Input -->
-            <div class="justify-self-end align-items-center flex-row d-flex" id="input-area">
-                <a href="#"><i class="far fa-smile text-muted px-3" style="font-size:1.5rem;"></i></a>
-                <input #inputVal (keyup.enter)="sendMessage(inputVal.value)" type="text" name="message" id="input" placeholder="Type a message"
-                    class="flex-grow-1 border-0 px-3 py-2 my-3 rounded shadow-sm">
+
+            <div id="input-area">
+                <div class="justify-self-end align-items-center flex-row d-flex " *ngIf="selectedFile">
+                    <div class="imgupper" *ngIf="selectedFile">
+                    <div class="imginner">
+                        <span class="close float-right" (click)="selectedFile=null"><i class="fa fa-times-circle"></i></span>
+                        <img [src]="selectedFile.src" width="50px">
+                    </div>
+                </div>
+                <i class="float-right fas fa-paper-plane text-muted px-3" style="cursor:pointer;" (click)="sendMessage('')"></i>
+            </div>
+            <div *ngIf="!selectedFile" class="justify-self-end align-items-center flex-row d-flex">
+                <a href="javascript:void(0)"><i class="far fa-smile text-muted px-3" style="font-size:1.5rem;"></i></a>
+                <input #inputVal (keyup.enter)="sendMessage(inputVal.value)" type="text" name="message" id="input"
+                    placeholder="Type a message" class="flex-grow-1 border-0 px-3 py-2 my-3 rounded shadow-sm">
                 <i class="fas fa-paper-plane text-muted px-3" style="cursor:pointer;" (click)="sendMessage(inputVal.value)"></i>
             </div>
+
         </div>
     </div>
+</div>
 </div>

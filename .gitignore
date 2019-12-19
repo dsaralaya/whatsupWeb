@@ -13,6 +13,7 @@
 # dependencies
 /client/node_modules
 /server/node_modules
+/server/src/uploads/
 # profiling files
 chrome-profiler-events*.json
 speed-measure-plugin*.json

@@ -15,7 +15,9 @@ class Express {
   private setMiddleware() {
     this.app.use(bodyParser.json());
     this.app.use(cors())
-    this.app.use(bodyParser.urlencoded({ extended: false }));
+    this.app.use(bodyParser.urlencoded({ extended: true }));
+    var dir = require('path').join(__dirname,'../uploads/');
+    this.app.use(express.static(dir));
   }
 
   private setRoutes() {
