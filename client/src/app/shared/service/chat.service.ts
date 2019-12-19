@@ -28,4 +28,8 @@ export class ChatService {
   getAllMessage() {
     return this.http.get(`${this.serverURL}/api/chat/getall`);
   }
+
+  loadMoreMessage(sender,page) {
+    return this.http.post(`${this.serverURL}/api/chat/load_more`, { sdr_rcv: sender, page});
+  }
 }

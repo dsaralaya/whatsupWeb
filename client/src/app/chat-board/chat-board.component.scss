@@ -164,3 +164,22 @@ margin-left: 8%;
 	margin-bottom: 5px;
 	
 }
+.loadmore,.date{
+	margin: 0 auto;
+    text-align: center;
+    border: 1px solid #ccc;
+    width: 13%;
+    background: #a9a9a9;
+    border-radius: 20px;
+    padding: 2px;
+    color: #e6e1e1;
+    margin-top: 7px;
+    font-size: 12px;
+}
+.date{
+	background: #457fe16e;
+    /* -webkit-appearance: media-volume-slider; */
+    color: #797676;
+    /* font-weight: bold; */
+    font-size: 13px;
+}

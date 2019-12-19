@@ -30,7 +30,8 @@
                     </div>
                     <div class="flex-grow-1 text-right mt-2">
                         <div class="small time">{{item.listMessage[0].date | date:'dd/MM/yyyy'}}</div>
-                        <!-- <div class="badge badge-success badge-pill small d-none" id="unread-count">2</div> -->
+                       
+                        <div  *ngIf="item.count && item.count>0" class="badge badge-success badge-pill small" id="unread-count">{{item.count}}</div>
                     </div>
                 </div>
 
@@ -87,9 +88,9 @@
 
             <!-- Messages -->
             <div class="d-flex flex-column" id="messages">
-
-                <ng-container *ngFor="let item of messageList">
-
+                             <a  class="loadmore" *ngIf="isLoad" href="javascipt:void(0)" (click)="loadMore()">Load More</a>
+                <ng-container *ngFor="let item of messageList;let i=index">
+                                <label class="date" *ngIf="!checkDate(messageList,i,item.date)">{{item.date | date:'dd/MM/yyyy' }}</label>
                     <div *ngIf="!item.from_me" class="align-self-start p-1 my-1 mx-3 rounded bg-white shadow-sm message-item">
                         <div class="small font-weight-bold text-primary">
                             {{item.sdr_rcv}}
@@ -97,7 +98,7 @@
                         <div class="d-flex flex-row">
                             <div class="body m-1 mr-2">{{item.message}}</div>
                             <div class="time ml-auto small text-right flex-shrink-0 align-self-end text-muted" style="width:75px;">
-                                {{item.date | date:'h:mm a'}}
+                                {{item.date | date:'h:mm a' }}
 
                             </div>
                         </div>
@@ -110,7 +111,7 @@
                                 <img src="{{item.path}}" width="50px">
                             </div>
                             <div class="time ml-auto small text-right flex-shrink-0 align-self-end text-muted" style="width:75px;">
-                                {{item.date | date:'h:mm a'}}
+                                {{item.date |date:'h:mm a' }}
                                 <i *ngIf="item.status==='success'" class="fas fa-check-circle"></i>
                                 <i *ngIf="item.status==='pending'" class="far fa-square"></i>
                             </div>

@@ -27,8 +27,9 @@ export class ChatRouter {
 
     init() {
         var controller = new ChatController();
-        this.router.post("/receive", controller.receive);
+        this.router.post("/receive", controller.receive.bind(controller));
         this.router.get("/getall", controller.getAllMessages);
+        this.router.post("/load_more", controller.loadMore);
         this.router.post("/send", upload,controller.sendMessage);
     }
 }

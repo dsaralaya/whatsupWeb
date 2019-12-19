@@ -17,7 +17,7 @@ export const appConfig = convict({
         fromEmail: 'd@gmail.com'
     },
     db: {
-        url: 'mongodb://localhost/whatsapp'
+        url: 'mongodb://51.79.74.14/whatsapp'
     },
     intractiveAPI:{
         client_id: 'cid5de59c223b075',

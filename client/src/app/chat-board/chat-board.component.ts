@@ -18,6 +18,8 @@ export class ChatBoardComponent implements OnInit {
   toggle = false;
   selectedFile: ImageSnippet;
   file: any;
+  page=0;
+  isLoad=true;
   constructor(private chat: ChatService) { }
 
   ngOnInit() {
@@ -42,37 +44,60 @@ export class ChatBoardComponent implements OnInit {
       });
 
     } else {
-      const sid = msg.sdr_rcv;
+      const sid = msg.sender;
       if (this.chatbox && this.chatbox.length > 0) {
         const sender = this.chatbox.find((t) => t.sender == sid);
         if (sender) {
           if (!sender.listMessage) {
             sender.listMessage = [];
           }
-          sender.listMessage.push(msg);
+          if (!sender.listMessage.find((t) => t.message_id === msg.message_id)){
+            sender.listMessage.push(msg);
+            if (sender.sender !== this.activatedSender) {
+              if (sender.count) {
+                sender.count += 1;
+              } else {
+                sender.count = 1;
+              }
+            }
+          }
+        
+        } else {
+          this.chatbox.push({ sender: sid, img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
+          count:1, listMessage: [msg ] });
         }
       } else {
-        this.chatbox.push({ sender: sid, listMessage: [{ msg }] });
+        this.chatbox.push({ sender: sid, listMessage: [msg] , 
+          img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`});
       }
     }
   }
 
   getMessages(item) {
     this.selectedFile = null;
+    this.page=0;
+    this.isLoad=true;
     this.activatedSender = item.sender;
     this.activatedSenderImg = item.img;
     if (this.chatbox && this.chatbox.length > 0) {
       const sender = this.chatbox.find((t) => t.sender === item.sender);
       if (sender) {
         this.messageList = [];
+        sender.count=0;
         this.messageList = sender.listMessage;
       }
     }
   }
+  checkDate(list,index,date){
+    if(index!=0){
+      return list.slice(0, index).find((t) => t.date.split(' ')[0] === date.split(' ')[0]);
+    }
+    return false;
+  }
 
   sendMessage(message) {
     if (message || this.selectedFile) {
-      if (this.inputVal){
+      if (this.inputVal) {
         this.inputVal.nativeElement.value = '';
       }
       const type = this.selectedFile ? 'image' : 'text';
@@ -126,6 +151,27 @@ export class ChatBoardComponent implements OnInit {
 
     reader.readAsDataURL(file);
   }
+
+  loadMore() {
+    this.page +=1;
+    this.chat.loadMoreMessage(this.activatedSender, this.page).subscribe((data: any) => {
+       if (data && data.length>0) {
+         const sender = this.chatbox.find((t) => t.sender === this.activatedSender);
+         if (sender) {
+           data = data.reverse();
+           data.forEach(d => {
+             sender.listMessage.unshift(d);
+           });
+
+         }
+       } else {
+         this.isLoad=false;
+       }
+    });
+  }
+
+  
+
 
 
 

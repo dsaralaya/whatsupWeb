@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import chatHistory from "./chatHistory.model";
 const _ = require("lodash");
 
-export default class MenuController {
+export default class ChatHistoryController {
   public async getall(req: Request, res: Response) {
     return chatHistory.find()
       .then(chathistories => {
@@ -39,22 +39,14 @@ export default class MenuController {
       });
   }
 
-  public async create(req: Request, res: Response) {
-    let chathistory = await chatHistory.findOne({ menuId: req.body.menuId });
+  public create(sender) {
+    let chathistory = chatHistory.findOne({ senderId: sender });
     if (chathistory) {
-      return res.send({
-        message: "chatHistory already exists!",
-        status: "failure",
-        statusCode: "400"
-      });
+      return false;
     } else {
-      let chathistory = new chatHistory(req.body);
-      await chathistory.save();
-      return res.send({
-        status: "success",
-        statusCode: "200",
-        data: chathistory
-      });
+      let chathistory = new chatHistory({ senderId: sender, menuId:1 });
+        chathistory.save();
+      return true;
     }
   }
 

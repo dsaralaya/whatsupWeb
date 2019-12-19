@@ -2,7 +2,8 @@ import express from "express";
 import * as bodyParser from "body-parser";
 import cors from 'cors';
 import Routes from "./router";
-
+import mongoose from "mongoose";
+import { appConfig } from "./appConfig";
 class Express {
   public app: express.Express;
   constructor() {
@@ -24,13 +25,13 @@ class Express {
     new Routes(this.app);
   }
   private setDb() {
-    // mongoose
-    //   .connect(appConfig.get('db').url, { useNewUrlParser: true, useUnifiedTopology:true })
-    //   .then(() => console.log("Now connected to MongoDB!"))
-    //   .catch(err => console.error("Something went wrong", err));
+    mongoose
+      .connect(appConfig.get('db').url, { useNewUrlParser: true, useUnifiedTopology:true })
+      .then(() => console.log("Now connected to MongoDB!"))
+      .catch(err => console.error("Something went wrong", err));
 
-    // mongoose.set("useCreateIndex", true);
-    // mongoose.set("useFindAndModify", false);
+    mongoose.set("useCreateIndex", true);
+    mongoose.set("useFindAndModify", false);
   }
 
   
