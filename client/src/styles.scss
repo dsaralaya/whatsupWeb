@@ -56,6 +56,7 @@ body{
 
 .sidebar .nav-link.active {
   color: #007bff;
+  background: rgba(51, 102, 255, 0.05) !important;
 }
 
 .sidebar .nav-link:hover .feather,
@@ -70,3 +71,35 @@ body{
 
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-material.css";
+
+.pull-right {
+  float: right;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid #c8ced3;
+  border-radius: 0.25rem;
+  height: auto;
+}
+
+.card .card-header {
+  background: transparent;
+  border-bottom: 1px solid #fff;
+}
+
+.bg {
+  background-color: #edf1f7;
+}
+
+.btn-dark {
+  color: #fff;
+  background-color: #535267;
+  border-color: #535267;
+}

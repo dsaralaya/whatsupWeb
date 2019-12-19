@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Validators, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
+  registerForm: FormGroup;
+  submitted = false;
+  edit = false;
   columnDefs = [
     {headerName: 'Make', field: 'make' },
     {headerName: 'Model', field: 'model' },
