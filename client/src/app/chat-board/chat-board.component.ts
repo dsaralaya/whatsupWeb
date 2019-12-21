@@ -18,8 +18,8 @@ export class ChatBoardComponent implements OnInit {
   toggle = false;
   selectedFile: ImageSnippet;
   file: any;
-  page=0;
-  isLoad=true;
+  page = 0;
+  isLoad = true;
   constructor(private chat: ChatService) { }
 
   ngOnInit() {
@@ -51,45 +51,49 @@ export class ChatBoardComponent implements OnInit {
           if (!sender.listMessage) {
             sender.listMessage = [];
           }
-          if (!sender.listMessage.find((t) => t.message_id === msg.message_id)){
-            sender.listMessage.push(msg);
-            if (sender.sender !== this.activatedSender) {
-              if (sender.count) {
-                sender.count += 1;
-              } else {
-                sender.count = 1;
-              }
+          // if (!sender.listMessage.find((t) => t.message_id === msg.message_id)) {
+          sender.listMessage.push(msg);
+          if (sender.sender !== this.activatedSender) {
+            if (sender.count) {
+              sender.count += 1;
+            } else {
+              sender.count = 1;
             }
           }
-        
+          // }
+
         } else {
-          this.chatbox.push({ sender: sid, img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
-          count:1, listMessage: [msg ] });
+          this.chatbox.push({
+            sender: sid, img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
+            count: 1, listMessage: [msg]
+          });
         }
       } else {
-        this.chatbox.push({ sender: sid, listMessage: [msg] , 
-          img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`});
+        this.chatbox.push({
+          sender: sid, listMessage: [msg],
+          img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`
+        });
       }
     }
   }
 
   getMessages(item) {
     this.selectedFile = null;
-    this.page=0;
-    this.isLoad=true;
+    this.page = 0;
+    this.isLoad = true;
     this.activatedSender = item.sender;
     this.activatedSenderImg = item.img;
     if (this.chatbox && this.chatbox.length > 0) {
       const sender = this.chatbox.find((t) => t.sender === item.sender);
       if (sender) {
         this.messageList = [];
-        sender.count=0;
+        sender.count = 0;
         this.messageList = sender.listMessage;
       }
     }
   }
-  checkDate(list,index,date){
-    if(index!=0){
+  checkDate(list, index, date) {
+    if (index != 0) {
       return list.slice(0, index).find((t) => t.date.split(' ')[0] === date.split(' ')[0]);
     }
     return false;
@@ -108,8 +112,8 @@ export class ChatBoardComponent implements OnInit {
       this.chat.sendMessage(message, this.activatedSender, type, fd).subscribe((data: any) => {
         this.selectedFile = null;
         this.pushMessage({
-          sdr_rcv: this.activatedSender, message, date: new Date().toISOString().split('T'),
-          id: data[0].message_id, from_me: true, status: 'pending', type, path: data[0].path || ''
+          sender: this.activatedSender, message, date: new Date().toISOString().replace('T', ' ').split('.')[0],
+          message_id: data[0].message_id, from_me: true, status: 'pending', type, path: data[0].path || ''
         });
         setTimeout(() => {
           const elem = document.getElementById('messages');
@@ -125,6 +129,7 @@ export class ChatBoardComponent implements OnInit {
       if (json) {
         json = json.reverse();
         json.forEach(element => {
+          element.sender = element.sdr_rcv;
           const sender = this.chatbox.find((t) => t.sender == element.sdr_rcv);
           if (sender) {
             if (!sender.listMessage) {
@@ -153,24 +158,24 @@ export class ChatBoardComponent implements OnInit {
   }
 
   loadMore() {
-    this.page +=1;
+    this.page += 1;
     this.chat.loadMoreMessage(this.activatedSender, this.page).subscribe((data: any) => {
-       if (data && data.length>0) {
-         const sender = this.chatbox.find((t) => t.sender === this.activatedSender);
-         if (sender) {
-           data = data.reverse();
-           data.forEach(d => {
-             sender.listMessage.unshift(d);
-           });
+      if (data && data.length > 0) {
+        const sender = this.chatbox.find((t) => t.sender === this.activatedSender);
+        if (sender) {
+          data = data.reverse();
+          data.forEach(d => {
+            sender.listMessage.unshift(d);
+          });
 
-         }
-       } else {
-         this.isLoad=false;
-       }
+        }
+      } else {
+        this.isLoad = false;
+      }
     });
   }
 
-  
+
 
 
 

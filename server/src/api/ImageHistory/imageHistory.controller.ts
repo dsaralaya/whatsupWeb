@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import ImageHistory from "./imageHistory.model";
 const _ = require("lodash");
 
-export default class MenuController {
+export default class ImageHistoryController {
   public async getall(req: Request, res: Response) {
     return ImageHistory.find()
       .then(imageHistories => {
@@ -39,22 +39,11 @@ export default class MenuController {
       });
   }
 
-  public async create(req: Request, res: Response) {
-    let imageHistory = await ImageHistory.findOne({ menuId: req.body.menuId });
-    if (imageHistory) {
-      return res.send({
-        message: "ImageHistory already exists!",
-        status: "failure",
-        statusCode: "400"
-      });
-    } else {
-      let imageHistory = new ImageHistory(req.body);
+  public async create(req) {
+    let imageHistory = await ImageHistory.findOne({ messageId: req.message_id });
+    if (!imageHistory) {
+      let imageHistory = new ImageHistory({ messageId: req.message_id, image: req.path });
       await imageHistory.save();
-      return res.send({
-        status: "success",
-        statusCode: "200",
-        data: imageHistory
-      });
     }
   }
 

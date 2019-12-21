@@ -13,7 +13,7 @@ export class RegisterRouter {
     var controller = new RegisterController();
     this.router.get("/list", validateAuth, controller.getall);
     this.router.get("/show/:id", validateAuth, controller.getbyid);
-    this.router.post("/add", validateAuth, controller.create);
+    this.router.post("/add", controller.create);
     this.router.put("/update/:id", validateAuth, controller.update);
     this.router.delete("/remove/:id", validateAuth, controller.delete);
   }

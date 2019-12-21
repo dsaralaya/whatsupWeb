@@ -17,7 +17,7 @@ class Express {
     this.app.use(bodyParser.json());
     this.app.use(cors())
     this.app.use(bodyParser.urlencoded({ extended: true }));
-    var dir = require('path').join(__dirname,'../uploads/');
+    var dir = require('path').join(__dirname, '../uploads/');
     this.app.use(express.static(dir));
   }
 
@@ -26,7 +26,7 @@ class Express {
   }
   private setDb() {
     mongoose
-      .connect(appConfig.get('db').url, { useNewUrlParser: true, useUnifiedTopology:true })
+      .connect(appConfig.get('db').url, { useNewUrlParser: true, useUnifiedTopology: true })
       .then(() => console.log("Now connected to MongoDB!"))
       .catch(err => console.error("Something went wrong", err));
 
@@ -34,7 +34,7 @@ class Express {
     mongoose.set("useFindAndModify", false);
   }
 
-  
+
 }
 
 export default new Express().app;

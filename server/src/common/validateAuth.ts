@@ -1,12 +1,12 @@
 import { appConfig } from "../config/appConfig";
 const jwt = require("jsonwebtoken");
 
-export default function(req, res, next) {
+export default function (req, res, next) {
   var token =
     req.body.token || req.query.token || req.headers["x-access-token"];
   if (token) {
     // verifies secret and checks exp
-    jwt.verify(token, appConfig.get("PrivateKey"), function(err, decoded) {
+    jwt.verify(token, appConfig.get("PrivateKey"), function (err, decoded) {
       if (err) {
         //failed verification.
         return res.send({ error: "Invalid token" });

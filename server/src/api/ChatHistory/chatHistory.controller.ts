@@ -19,7 +19,7 @@ export default class ChatHistoryController {
   }
 
   public async getbyid(req: Request, res: Response) {
-    chatHistory.findById(req.params.id)
+    chatHistory.findOne({ assignedTo: req.params.id })
       .then(chathistory => {
         if (!chathistory) {
           return res.send({
@@ -39,14 +39,14 @@ export default class ChatHistoryController {
       });
   }
 
-  public create(sender) {
-    let chathistory = chatHistory.findOne({ senderId: sender });
+  public async create(sender) {
+    let chathistory = await chatHistory.findOne({ senderId: sender });
     if (chathistory) {
-      return false;
+      return chathistory;
     } else {
-      let chathistory = new chatHistory({ senderId: sender, menuId:1 });
-        chathistory.save();
-      return true;
+      let chathistory = new chatHistory({ senderId: sender, menuId: 1 });
+      await chathistory.save();
+      return chathistory;
     }
   }
 
