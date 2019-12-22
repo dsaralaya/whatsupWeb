@@ -18,6 +18,9 @@ const schema = new mongoose.Schema({
     required: true
   },
   assignedChatCount: {
+    type: Number
+  },
+  status: {
     type: String
   }
 })

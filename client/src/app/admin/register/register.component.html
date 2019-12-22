@@ -27,14 +27,14 @@
              </div>
  
              <ag-grid-angular
-             style="width: 500px; height: 400px"
+             style="height: 390px"
              class="ag-theme-material"
              [rowData]="rowData"
              [columnDefs]="columnDefs"
              >
          </ag-grid-angular>
           </div>
-          <ng-container *ngTemplateOutlet="branchtemplate;context:{ form:form,submitted:submitted}">
+          <ng-container *ngTemplateOutlet="registertemplate;context:{ form:form,submitted:submitted}">
           </ng-container>
  
        </div>
@@ -42,14 +42,9 @@
  
  </div>
  
- <ng-template #branchtemplate>
+ <ng-template #registertemplate>
     <div *ngIf="edit">
-       <!-- <div class="row">
-          <ul class="list-inline pull-left btn-back" (click)="edit=!edit;isNew=false">
-             <li class="list-inline-item"> <a><i class="la la-arrow-left"></i> Back</a></li>
-          </ul>
-       </div> -->
-       <form>
+       <form [formGroup]="registerForm">
           <div class="row">
              <div class="col-sm-12">
                 <h5 class="mb-3">{{isNew?'Add':'Edit'}} User</h5>
@@ -58,17 +53,17 @@
                 <div class="form-group">
                    <label class="d-block required">Name</label>
                    <input type="text" class="form-control" name="name" formControlName="name">
-                   <!-- <error-message label="Branch Name" [submitted]="submitted" controlName="name">
-                   </error-message> -->
+                   <error-message label="Name" [submitted]="submitted" controlName="name">
+                   </error-message>
                 </div>
              </div>
  
              <div class="col-md-4">
                 <div class="form-group">
                    <label class="d-block required">Email</label>
-                   <input type="email" class="form-control" name="location" formControlName="email">
-                   <!-- <error-message label="Location" [submitted]="submitted" controlName="location">
-                   </error-message> -->
+                   <input type="email" class="form-control" name="email" formControlName="email">
+                   <error-message label="Email" [submitted]="submitted" controlName="email">
+                   </error-message>
                 </div>
              </div>
  
@@ -76,8 +71,8 @@
                 <div class="form-group">
                    <label class="d-block required">Password</label>
                    <input type="password" class="form-control" name="password" formControlName="password" />
-                   <!-- <error-message label="Phone" [submitted]="submitted" controlName="phone">
-                   </error-message> -->
+                   <error-message label="Password" [submitted]="submitted" controlName="password">
+                   </error-message>
  
                 </div>
              </div>
@@ -85,21 +80,27 @@
              <div class="col-md-4">
                 <div class="form-group">
                    <label class="d-block">Role</label>
-                   <input type="text" class="form-control" name="role" formControlName="role">
-                    <!-- <error-message label="Phone" [submitted]="submitted" controlName="phone">
-                   </error-message> -->
+                   <ng-select [items]="roleType" bindLabel="name" bindValue="value" name="userRole" formControlName="userRole">
+                     </ng-select>
+                   <!-- <input type="text" class="form-control" name="userRole" formControlName="userRole"> -->
+                    <error-message label="Role" [submitted]="submitted" controlName="userRole">
+                   </error-message>
                 </div>
              </div>
              <div class="col-md-4">
                 <div class="form-group">
                    <label class="d-block">Status</label>
-                   <input type="text" class="form-control" name="status" formControlName="status">
- 
+                   <!-- <input type="text" class="form-control" name="status" formControlName="status"> -->
+                   <ng-select [items]="statusType" bindLabel="name" bindValue="value" name="status" formControlName="status">
+                     </ng-select>
+                   <input type="hidden" class="form-control" name="assignedChatCount" value="0" formControlName="assignedChatCount">
+                   <error-message label="Status" [submitted]="submitted" controlName="status">
+                    </error-message>
                 </div>
              </div>
-             <div class="col-md-12" *ngIf="!active">
+             <div class="col-md-12 mt-2" *ngIf="!active">
                 <div class="button-group">
-                   <button class="btn btn-dark mr-3" (click)="edit=!edit;isNew=false" type="button">Back</button>
+                   <button class="btn btn-dark mr-3" (click)="edit=!edit;isNew=false;reset()" type="button">Back</button>
                    <button type="button" (click)="onSubmit()" class="btn btn-success">Submit</button>
                 </div>
              </div>

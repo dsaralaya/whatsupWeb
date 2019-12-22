@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from '../shared/service/chat.service';
+import { AuthenticationService } from '../shared/service/auth.service';
+import { Router } from '@angular/router';
 
 class ImageSnippet {
   constructor(public src: string, public file: File) { }
@@ -20,7 +22,13 @@ export class ChatBoardComponent implements OnInit {
   file: any;
   page = 0;
   isLoad = true;
-  constructor(private chat: ChatService) { }
+
+  constructor(private chat: ChatService, private authService: AuthenticationService, private router: Router) {
+    const currentUser = this.authService.currentUserValue;
+    if (currentUser === null) {
+      this.router.navigate(['/login']);
+    }
+  }
 
   ngOnInit() {
     this.formatMessage();
@@ -178,6 +186,9 @@ export class ChatBoardComponent implements OnInit {
 
 
 
+  logout() {
+    this.authService.logout();
+  }
 
 
 }

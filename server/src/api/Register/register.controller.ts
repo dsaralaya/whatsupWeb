@@ -56,7 +56,8 @@ export default class RegisterController {
             "email",
             "password",
             "userRole",
-            "assignedChatCount"
+            "assignedChatCount",
+            "status"
           ])
         );
         const salt = await bcrypt.genSalt(10);
@@ -69,9 +70,9 @@ export default class RegisterController {
             "_id",
             "name",
             "email",
-            "password",
             "userRole",
-            "assignedChatCount"
+            "assignedChatCount",
+            "status"
           ])
         });
       }

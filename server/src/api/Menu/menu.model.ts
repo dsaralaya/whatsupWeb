@@ -5,7 +5,11 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  image: {
+  menuType: {
+    type: String,
+    required: true
+  },
+  file: {
     type: String,
     required: false
   },

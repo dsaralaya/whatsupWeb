@@ -1,9 +1,9 @@
 <nav class="navbar navbar-dark fixed-top bg-white flex-md-nowrap p-2 shadow">
-    <div class="col-sm-3 col-md-2 mr-0" href="#">Company name</div>
-
+    <div class="col-sm-3 col-md-2 mr-0" href="#">ChatBot</div>
+    <h6 href="#" class="username">Welcome back, {{ currentUserName }}</h6>
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="nav-link logout" href="#">  <i class="fas fa-sign-out-alt"></i>Logout</a>
+            <a class="nav-link logout cursor" (click)="logout()">  <i class="fas fa-sign-out-alt"></i>Logout</a>
         </li>
     </ul>
 </nav>

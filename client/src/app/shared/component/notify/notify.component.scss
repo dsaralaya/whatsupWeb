@@ -1,0 +1,20 @@
+.alert {
+    position: fixed;
+    margin-bottom: 1rem;
+    top: 20px;
+    z-index: 9999999;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 30%;
+    .alert-heading {
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    p {
+        font-size: 13px;
+        text-transform: initial;
+        font-weight: normal;
+    }
+}

@@ -17,7 +17,9 @@
                   </div>
     <br/>
                   <button class="btn btn-lg loginBtn btn-block text-uppercase" type="button" (click)="onSubmit()">Sign in</button>
-                  <hr class="my-4">
+
+                  <p *ngIf="error" class="error">Invalid Email / Password</p>
+                  <hr class="my-5">
                 </form>
               </div>
             </div>

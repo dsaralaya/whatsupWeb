@@ -44,7 +44,7 @@ export default class ChatController {
         }
     }
 
-    private async  savechatHistory(req) {
+    private async savechatHistory(req) {
         var chat = new ChatHistoryController();
         return await chat.create(req)
     }

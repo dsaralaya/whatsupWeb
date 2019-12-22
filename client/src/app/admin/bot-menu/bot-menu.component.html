@@ -1,0 +1,131 @@
+<!-- <div class="container">
+<ag-grid-angular
+    style="width: 500px; height: 500px;"
+    class="ag-theme-material"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    >
+</ag-grid-angular>
+</div> -->
+
+<div class="animated fadeIn">
+
+        <div class="card">
+           <div class="card-header pt-3 pb-0">
+              <h5 class="h4">
+                 Bot Menus
+              </h5>
+           </div>
+           <div class="card-body">
+              <div class="{{edit?'d-none':''}}">
+                 <div class="row">
+                    <div class="col-sm-12" >
+                       <button type="button" class="btn btn-primary pull-right form-group" (click)="edit=!edit;isNew=true">
+                       <!-- <i class="la la-plus font-1x3"></i> --> Add Bot Menu</button>
+                    </div>
+                   <br/>
+                 </div>
+     
+                 <ag-grid-angular
+                 style="height: 390px"
+                 class="ag-theme-material"
+                 [rowData]="rowData"
+                 [columnDefs]="columnDefs"
+                 >
+             </ag-grid-angular>
+              </div>
+              <ng-container *ngTemplateOutlet="botmenutemplate;context:{ form:form,submitted:submitted}">
+              </ng-container>
+     
+           </div>
+        </div>
+     
+     </div>
+     
+     <ng-template #botmenutemplate>
+        <div *ngIf="edit">
+           <form [formGroup]="botMenuForm">
+              <div class="row">
+                 <div class="col-sm-12">
+                    <h5 class="mb-3">{{isNew?'Add':'Edit'}} Bot Menu</h5>
+                 </div>
+                 <div class="col-md-4">
+                        <div class="form-group">
+                           <label class="d-block required">Menu Id</label>
+                           <input type="number" class="form-control" name="menuId" formControlName="menuId">
+                           <error-message label="Menu Id" [submitted]="submitted" controlName="menuId">
+                           </error-message>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4">
+                           <div class="form-group">
+                              <label class="d-block required">Menu Type</label>
+                              <ng-select [items]="menuType" bindLabel="name" bindValue="value" name="menuType" formControlName="menuType">
+                                 </ng-select>
+                              <error-message label="Menu Type" [submitted]="submitted" controlName="menuType">
+                              </error-message>
+                           </div>
+                        </div>
+
+                 <div class="col-md-4" *ngIf="botMenuForm.controls.menuType.value === 'image' || botMenuForm.controls.menuType.value === 'imageText'">
+                    <div class="form-group">
+                       <label class="d-block required">Image</label>
+                       <input type="text" class="form-control" name="image" formControlName="image">
+                       <error-message label="Image" [submitted]="submitted" controlName="image">
+                       </error-message>
+                    </div>
+                 </div>
+     
+                 <div class="col-md-4" *ngIf="botMenuForm.controls.menuType.value === 'text' || botMenuForm.controls.menuType.value === 'imageText'">
+                    <div class="form-group">
+                       <label class="d-block required">Text</label>
+                       <input type="text" class="form-control" name="text" formControlName="text">
+                       <error-message label="Text" [submitted]="submitted" controlName="text">
+                       </error-message>
+                    </div>
+                 </div>
+                 
+                 <div class="col-md-4">
+                        <div class="form-group">
+                           <label class="d-block">Option 1</label>
+                           <input type="text" class="form-control" name="option1" formControlName="option1">
+                            <error-message label="Option 1" [submitted]="submitted" controlName="option1">
+                           </error-message>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="form-group">
+                           <label class="d-block">Option 2</label>
+                           <input type="text" class="form-control" name="option2" formControlName="option2">
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                            <div class="form-group">
+                               <label class="d-block">Option 3</label>
+                               <input type="text" class="form-control" name="option3" formControlName="option3">
+                            </div>
+                         </div>
+                         <div class="col-md-4">
+                                <div class="form-group">
+                                   <label class="d-block">Option 4</label>
+                                   <input type="text" class="form-control" name="option4" formControlName="option4">
+                                </div>
+                             </div>
+                             <div class="col-md-4">
+                                    <div class="form-group">
+                                       <label class="d-block">Option 5</label>
+                                       <input type="text" class="form-control" name="option5" formControlName="option5">
+                                    </div>
+                                 </div>
+
+                 <div class="col-md-12 mt-2" *ngIf="!active">
+                    <div class="button-group">
+                       <button class="btn btn-dark mr-3" (click)="edit=!edit;isNew=false;botMenuForm.reset();submitted=false" type="button">Back</button>
+                       <button type="button" (click)="onSubmit()" class="btn btn-success">Submit</button>
+                    </div>
+                 </div>
+              </div>
+           </form>
+        </div>
+     </ng-template>

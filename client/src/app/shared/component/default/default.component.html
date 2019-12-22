@@ -1,5 +1,5 @@
 <app-header></app-header>
-<div class="container-fluid margin">
+<div class="container-fluid margin bg">
     <div class="row">
         <div class="col-md-2 d-none d-md-block bg-white sidebar shadow">
                 <br/>
@@ -19,12 +19,18 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" routerLink="/admin/register" (click)="selected(3)" href="#">
-                                <i class="fas fa-user-plus"></i>
-                            Add User
+                                <i class="fas fa-users"></i>
+                            Users
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" (click)="selected(4)" href="#">
+                            <a class="nav-link" routerLink="/admin/botmenu" (click)="selected(4)" href="#">
+                                <i class="fab fa-android"></i>
+                                Bot Menu
+                            </a>
+                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/admin/settings" (click)="selected(5)" href="#">
                                 <i class="fas fa-cogs"></i>
                             Settings
                         </a>
@@ -33,7 +39,9 @@
             </div>
         </div>
         <div class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <app-notify></app-notify>
             <router-outlet></router-outlet>
+            <app-confirm-dialog></app-confirm-dialog>
         </div>
     </div>
 

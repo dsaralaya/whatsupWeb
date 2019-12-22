@@ -1,6 +1,7 @@
 import { Router } from "express";
 import MenuController from "./menu.controller";
 import validateAuth from "../../common/validateAuth";
+import uploadImage from "../../common/mulder";
 
 export class MenuRouter {
   public router: Router;
@@ -13,9 +14,9 @@ export class MenuRouter {
     var controller = new MenuController();
     this.router.get("/list", validateAuth, controller.getall);
     this.router.get("/show/:id", validateAuth, controller.getbyid);
-    this.router.post("/add", validateAuth, controller.create);
-    this.router.put("/update/:id", validateAuth, controller.update);
-    this.router.delete("/remove/:id", validateAuth,controller.delete);
+    this.router.post("/add", validateAuth, uploadImage, controller.create);
+    this.router.put("/update/:id", validateAuth, uploadImage, controller.update);
+    this.router.delete("/remove/:id", validateAuth, controller.delete);
   }
 }
 
