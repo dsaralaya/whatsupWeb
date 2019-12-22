@@ -45,7 +45,7 @@ export class ChatBoardComponent implements OnInit {
     if (msg.action === 'sender' && msg.message_id && msg.success && msg.success === '1') {
       // const chat = this.chatbox.find((t) => t.sender === msg.sdr_rcv).find((t) => t.id === msg.id );
       this.chatbox.forEach(sender => {
-        const chat = sender.listMessage.find((t) => t.id === msg.message_id);
+        const chat = sender.listMessage.find((t) => t.message_id === msg.message_id);
         if (chat) {
           chat.status = 'success';
         }

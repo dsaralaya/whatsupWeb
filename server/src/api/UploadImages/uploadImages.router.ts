@@ -1,8 +1,8 @@
 import { Router } from "express";
 import UploadImagesController from "./uploadImages.controller";
-import uploadImage from "../../common/mulder";
+import uploadImage from "../../common/multer";
 
-export class  UploadImagesRouter {
+export class UploadImagesRouter {
     public router: Router;
 
     constructor() {
@@ -11,7 +11,7 @@ export class  UploadImagesRouter {
 
     init() {
         var controller = new UploadImagesController();
-        this.router.post("/upload",uploadImage, controller.upload);
+        this.router.post("/upload", uploadImage, controller.upload);
         this.router.get("/delete", controller.delete);
         //this.router.post("/send", upload,controller.sendMessage);
     }

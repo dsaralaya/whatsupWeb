@@ -48,7 +48,7 @@ export default class MenuController {
         statusCode: "400"
       });
     } else {
-      req.body['file'] = req.file.filename
+      req.body['file'] = req.file ? req.file.filename : '';
       let menu = new Menu(req.body);
       //menu['file'] = req.file.filename;
       await menu.save();

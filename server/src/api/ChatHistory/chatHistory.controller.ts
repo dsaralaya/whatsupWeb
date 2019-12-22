@@ -46,7 +46,7 @@ export default class ChatHistoryController {
     } else {
       let chathistory = new chatHistory({ senderId: sender, menuId: 1 });
       await chathistory.save();
-      return chathistory;
+      return null;
     }
   }
 
