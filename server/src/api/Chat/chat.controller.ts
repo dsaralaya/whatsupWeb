@@ -16,12 +16,12 @@ export default class ChatController {
     public async receive(req: Request, res: Response) {
         console.log('message came');
         if (res.req.body.action == "receive") {
-            // if (myCache.get(res.req.body.message_id)) {
-            //     console.log('duplicate request');
-            //     return res.send({ message: 'duplictae request' });
-            // }
-            // console.log('cachet set');
-            // myCache.set(res.req.body.message_id, 'res.req.body.message_id', 5000);
+            if (myCache.get(res.req.body.message_id)) {
+                console.log('duplicate request');
+                return res.send({ message: 'duplictae request' });
+            }
+            console.log('cachet set');
+            myCache.set(res.req.body.message_id, 'res.req.body.message_id', 5000);
             var isfirst = await this.savechatHistory(res.req.body.sender);
             //first message
             if (!isfirst) {
