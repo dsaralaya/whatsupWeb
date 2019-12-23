@@ -13,6 +13,10 @@ export class CrudeService {
         return this.http.post<any>(`${this.endpoint}/${model}`, objToCreate, { headers: this.getHeaders()});
     }
 
+    createWithHeader<T>(model: T | any, objToCreate: T | any): Observable<T | T[]> {
+        return this.http.post<any>(`${this.endpoint}/${model}`, objToCreate, { headers: this.getHeadersWithType()});
+    }
+
     createByAction<T>(model: T | any, action: any, objToCreate: T | any): Observable<T | T[]> {
         return this.http.post<any>(`${this.endpoint}/${model}/${action}`, JSON.stringify(objToCreate), { headers: this.getHeaders()});
     }
@@ -30,7 +34,11 @@ export class CrudeService {
     }
 
     update(model: any, id: any, objToUpdate: any): Observable<any> {
-        return this.http.put<any>(`${this.endpoint}/${model}/${id}`, JSON.stringify(objToUpdate));
+        return this.http.put<any>(`${this.endpoint}/${model}/${id}`, JSON.stringify(objToUpdate), { headers: this.getHeaders()});
+    }
+
+    updateWithHeader(model: any, id: any, objToUpdate: any): Observable<any> {
+        return this.http.put<any>(`${this.endpoint}/${model}/${id}`, JSON.stringify(objToUpdate), { headers: this.getHeadersWithType()});
     }
 
     updateByAction(model: any, id: any, action: any, objToUpdate: any): Observable<any> {
@@ -44,6 +52,12 @@ export class CrudeService {
     getHeaders() {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
+            'x-access-token': this.authService.token });
+        return headers;
+    }
+
+    getHeadersWithType() {
+        const headers = new HttpHeaders({
             'x-access-token': this.authService.token });
         return headers;
     }

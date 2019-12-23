@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Menu from "./menu.model";
+import UploadImagesController from "../UploadImages/uploadImages.controller";
 const _ = require("lodash");
 
 export default class MenuController {
@@ -28,10 +29,31 @@ export default class MenuController {
             message: "Menu not found with id " + req.body.id
           });
         }
-        res.send({ status: "success", statusCode: "200", data: menu });
+        return res.send({ status: "success", statusCode: "200", data: menu });
       })
       .catch(err => {
         return res.send({
+          status: "failure",
+          statusCode: "400",
+          message: "Error retrieving Menu with id " + req.body.id
+        });
+      });
+  }
+
+  public async getfilebyid(req: Request) {
+    return await Menu.findById(req.params.id)
+      .then(menu => {
+        if (!menu) {
+          return ({
+            status: "failure",
+            statusCode: "400",
+            message: "Menu not found with id " + req.body.id
+          });
+        }
+        return ({ status: "success", statusCode: "200", data: menu });
+      })
+      .catch(err => {
+        return ({
           status: "failure",
           statusCode: "400",
           message: "Error retrieving Menu with id " + req.body.id
@@ -61,6 +83,13 @@ export default class MenuController {
   }
 
   public async update(req: Request, res: Response) {
+    await this.getfilebyid(req).then(function(result:any)
+    {
+      if (req.files && result.data.file !== "") {
+        var deleteImage = new UploadImagesController();
+        deleteImage.delete(result.data.file);
+        //req.body['file'] = '';
+      }
     Menu.findByIdAndUpdate(req.params.id, req.body, { new: true })
       .then(menu => {
         if (!menu) {
@@ -79,26 +108,34 @@ export default class MenuController {
           message: "Error updating Menu with id " + req.body.id
         });
       });
+    })
   }
 
   public async delete(req: Request, res: Response) {
-    Menu.findByIdAndRemove(req.params.id)
-      .then(menu => {
-        if (!menu) {
+    await this.getfilebyid(req).then(function(result:any)
+    {
+      if (result.data.file) {
+        var deleteImage = new UploadImagesController();
+        deleteImage.delete(result.data.file);
+      }
+      Menu.findByIdAndRemove(req.params.id)
+        .then(menu => {
+          if (!menu) {
+            return res.send({
+              status: "failure",
+              statusCode: "400",
+              message: "Menu not found with id " + req.params.id
+            });
+          }
+          res.send({ status: "success", statusCode: "200", data: menu });
+        })
+        .catch(err => {
           return res.send({
             status: "failure",
             statusCode: "400",
-            message: "Menu not found with id " + req.params.id
+            message: "Error deleting Menu with id " + req.params.id
           });
-        }
-        res.send({ status: "success", statusCode: "200", data: menu });
-      })
-      .catch(err => {
-        return res.send({
-          status: "failure",
-          statusCode: "400",
-          message: "Error deleting Menu with id " + req.params.id
         });
-      });
+    })
   }
 }

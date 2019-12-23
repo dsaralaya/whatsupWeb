@@ -2,27 +2,27 @@ export const pickList = {
   menuList: [
     {
       name: 'Image Only',
-      value: 'image'
+      value: 'Image'
     },
-    { name: 'Text Only', value: 'text' },
+    { name: 'Text Only', value: 'Text' },
     {
       name: 'Image + Text',
-      value: 'imageText'
+      value: 'ImageText'
     }
   ],
   status: [
     {
       name: 'Active',
-      value: 'active'
+      value: 'Active'
     },
-    { name: 'Inactive', value: 'inactive' }
+    { name: 'Inactive', value: 'Inactive' }
   ],
   roleList: [
     {
       name: 'Admin',
-      value: 'admin'
+      value: 'Admin'
     },
-    { name: 'Sales', value: 'sales' },
-    { name: 'Support', value: 'support' }
+    { name: 'Sales', value: 'Sales' },
+    { name: 'Support', value: 'Support' }
   ]
 };

@@ -15,7 +15,7 @@ const schema = new mongoose.Schema({
   },
   text: {
     type: String,
-    required: true
+    required: false
   },
   option1: {
     type: String,

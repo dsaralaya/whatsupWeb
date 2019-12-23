@@ -4,9 +4,9 @@ import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AdminRoutingModule } from './admin.routing';
 import { AgGridModule } from 'ag-grid-angular';
-import { FieldErrorMessageComponent } from '../shared/component/field-error-message/field-error-message.component';
 import { SharedModule } from '../shared/shared.module';
 import { BotMenuComponent } from './bot-menu/bot-menu.component';
+import { ButtonRendererComponent } from '../shared/component/button-renderer.component';
 
 
 
@@ -17,7 +17,7 @@ import { BotMenuComponent } from './bot-menu/bot-menu.component';
     BotMenuComponent
   ],
   imports: [
-    CommonModule, AdminRoutingModule, AgGridModule.withComponents([]), SharedModule
+    CommonModule, AdminRoutingModule, AgGridModule.withComponents([ButtonRendererComponent]), SharedModule
   ]
 })
 export class AdminModule { }

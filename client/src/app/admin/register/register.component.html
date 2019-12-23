@@ -31,6 +31,7 @@
              class="ag-theme-material"
              [rowData]="rowData"
              [columnDefs]="columnDefs"
+             [frameworkComponents]="frameworkComponents"
              >
          </ag-grid-angular>
           </div>
@@ -67,7 +68,7 @@
                 </div>
              </div>
  
-             <div class="col-md-4">
+             <div class="col-md-4" *ngIf="isNew">
                 <div class="form-group">
                    <label class="d-block required">Password</label>
                    <input type="password" class="form-control" name="password" formControlName="password" />

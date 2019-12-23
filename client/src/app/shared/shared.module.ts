@@ -7,6 +7,7 @@ import { FieldErrorMessageComponent } from './component/field-error-message/fiel
 import { ConfirmDialogComponent } from './component/confirm-dialog/confirm-dialog.component';
 import { NotifyComponent } from './component/notify/notify.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ButtonRendererComponent } from './component/button-renderer.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     HeaderComponent,
     FieldErrorMessageComponent,
     ConfirmDialogComponent,
-    NotifyComponent
+    NotifyComponent,
+    ButtonRendererComponent
   ],
   imports: [
     CommonModule, ReactiveFormsModule, FormsModule, NgSelectModule

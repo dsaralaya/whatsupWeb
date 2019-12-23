@@ -31,6 +31,7 @@
                  class="ag-theme-material"
                  [rowData]="rowData"
                  [columnDefs]="columnDefs"
+                 [frameworkComponents]="frameworkComponents"
                  >
              </ag-grid-angular>
               </div>
@@ -68,16 +69,19 @@
                            </div>
                         </div>
 
-                 <div class="col-md-4" *ngIf="botMenuForm.controls.menuType.value === 'image' || botMenuForm.controls.menuType.value === 'imageText'">
+                 <div class="col-md-4" *ngIf="botMenuForm.controls.menuType.value === 'Image' || botMenuForm.controls.menuType.value === 'ImageText'">
                     <div class="form-group">
-                       <label class="d-block required">Image</label>
-                       <input type="text" class="form-control" name="image" formControlName="image">
-                       <error-message label="Image" [submitted]="submitted" controlName="image">
+                        <div class="upload-btn-wrapper">
+                              <button class="Uploadbtn">Upload Image</button> &nbsp;
+                              <input type="file" name="file" (change)="onFileChange($event);" />
+                            </div>
+                            <img [src]="localUrl" *ngIf="localUrl" class="img">
+                       <error-message label="Image" [submitted]="submitted" controlName="file">
                        </error-message>
                     </div>
                  </div>
      
-                 <div class="col-md-4" *ngIf="botMenuForm.controls.menuType.value === 'text' || botMenuForm.controls.menuType.value === 'imageText'">
+                 <div class="col-md-4" *ngIf="botMenuForm.controls.menuType.value === 'Text' || botMenuForm.controls.menuType.value === 'ImageText'">
                     <div class="form-group">
                        <label class="d-block required">Text</label>
                        <input type="text" class="form-control" name="text" formControlName="text">

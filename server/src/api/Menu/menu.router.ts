@@ -13,10 +13,10 @@ export class MenuRouter {
   init() {
     var controller = new MenuController();
     this.router.get("/list", validateAuth, controller.getall);
-    this.router.get("/show/:id", validateAuth, controller.getbyid);
-    this.router.post("/add", uploadImage, controller.create);
-    this.router.put("/update/:id", validateAuth, uploadImage, controller.update);
-    this.router.delete("/remove/:id", validateAuth, controller.delete);
+    this.router.get("/show/:id", validateAuth, controller.getbyid.bind(controller));
+    this.router.post("/add", validateAuth, uploadImage, controller.create);
+    this.router.put("/update/:id", validateAuth,uploadImage, controller.update.bind(controller));
+    this.router.delete("/remove/:id", validateAuth, controller.delete.bind(controller));
   }
 }
 

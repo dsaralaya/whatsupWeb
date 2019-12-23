@@ -4,6 +4,7 @@ import { CrudeService } from 'src/app/shared/service/crud.service';
 import { ConfirmDialogService } from 'src/app/shared/service/confirm-dialog.service';
 import { NotificationService } from 'src/app/shared/service/notification.service';
 import { pickList } from 'src/app/shared/model/picklist';
+import { ButtonRendererComponent } from 'src/app/shared/component/button-renderer.component';
 
 
 @Component({
@@ -17,13 +18,24 @@ export class RegisterComponent implements OnInit {
   edit = false;
   isNew = false;
   active = false;
+  frameworkComponents: any;
 
   columnDefs = [
-    { headerName: 'Name', field: 'name', filter: 'agTextColumnFilter', filterParams: { clearButton: true } },
-    { headerName: 'Email', field: 'email', filter: 'agTextColumnFilter', filterParams: { clearButton: true } },
-    { headerName: 'Role', field: 'userRole', filter: 'agTextColumnFilter', filterParams: { clearButton: true } },
-    { headerName: 'Assigned Chat Count', field: 'assignedChatCount', filter: 'agTextColumnFilter', filterParams: { clearButton: true } },
-    { headerName: 'Status', field: 'status', filter: 'agTextColumnFilter', filterParams: { clearButton: true } }
+    { headerName: 'Name', field: 'name', filter: 'agTextColumnFilter', filterParams: { clearButton: true }, width: 150 },
+    { headerName: 'Email', field: 'email', filter: 'agTextColumnFilter', filterParams: { clearButton: true },  width: 180 },
+    { headerName: 'Role', field: 'userRole', filter: 'agTextColumnFilter', filterParams: { clearButton: true },  width: 100 },
+    // tslint:disable-next-line: max-line-length
+    { headerName: 'Assigned Chat Count', field: 'assignedChatCount', filter: 'agTextColumnFilter', filterParams: { clearButton: true },  width: 200 },
+    { headerName: 'Status', field: 'status', filter: 'agTextColumnFilter', filterParams: { clearButton: true } },
+    {
+      headerName: 'Action',
+      cellRenderer: 'buttonRenderer',
+      cellRendererParams: {
+        onEdit: this.gridEdit.bind(this),
+        onDelete: this.gridRemove.bind(this)
+      },
+      width: 150
+    },
   ];
   rowData = [];
 
@@ -34,7 +46,11 @@ export class RegisterComponent implements OnInit {
     private crudeService: CrudeService,
     private confirmDialogService: ConfirmDialogService,
     private notificationSvc: NotificationService
-  ) {}
+  ) {
+    this.frameworkComponents = {
+      buttonRenderer: ButtonRendererComponent
+    };
+  }
 
   ngOnInit() {
     this.generateForm();
@@ -43,6 +59,7 @@ export class RegisterComponent implements OnInit {
 
   generateForm() {
     this.registerForm = new FormGroup({
+      _id: new FormControl(''),
       name: new FormControl('', {
         validators: [Validators.required],
         updateOn: 'blur'
@@ -81,7 +98,7 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     if (this.registerForm.valid) {
-      if (!this.registerForm.value.id) {
+      if (!this.registerForm.value._id) {
         this.crudeService
           .create('register/add', this.registerForm.value)
           .subscribe((res: any) => {
@@ -98,7 +115,7 @@ export class RegisterComponent implements OnInit {
         this.crudeService
           .update(
             'register/update',
-            this.registerForm.value.id,
+            this.registerForm.value._id,
             this.registerForm.value
           )
           .subscribe((res: any) => {
@@ -126,7 +143,7 @@ export class RegisterComponent implements OnInit {
     this.confirmDialogService.confirmThis(
       'Are you sure to delete?',
       () => {
-        context.crudeService.delete('register/remove', dataItem.id).subscribe(data => {
+        context.crudeService.delete('register/remove', dataItem._id).subscribe(data => {
           context.notificationSvc.success(
             'info',
             'User deleted successfully'

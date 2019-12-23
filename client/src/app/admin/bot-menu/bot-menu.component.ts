@@ -4,6 +4,8 @@ import { CrudeService } from 'src/app/shared/service/crud.service';
 import { ConfirmDialogService } from 'src/app/shared/service/confirm-dialog.service';
 import { NotificationService } from 'src/app/shared/service/notification.service';
 import { pickList } from 'src/app/shared/model/picklist';
+import { ButtonRendererComponent } from 'src/app/shared/component/button-renderer.component';
+import { configuation } from '../../shared/config';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +18,9 @@ export class BotMenuComponent implements OnInit {
   edit = false;
   isNew = false;
   active = false;
+  frameworkComponents: any;
+  imageFile: any;
+  localUrl = '';
 
   columnDefs = [
     {headerName: 'Menu Id', field: 'menuId', filter: 'agTextColumnFilter', filterParams: { clearButton: true }, width: 125  },
@@ -25,7 +30,15 @@ export class BotMenuComponent implements OnInit {
     {headerName: 'Option 2', field: 'option2', filter: 'agTextColumnFilter', filterParams: { clearButton: true }, width: 120},
     {headerName: 'Option 3', field: 'option3', filter: 'agTextColumnFilter', filterParams: { clearButton: true }, width: 120},
     {headerName: 'Option 4', field: 'option4', filter: 'agTextColumnFilter', filterParams: { clearButton: true }, width: 120},
-    {headerName: 'Option 5', field: 'option5', filter: 'agTextColumnFilter', filterParams: { clearButton: true }, width: 120}
+    {headerName: 'Option 5', field: 'option5', filter: 'agTextColumnFilter', filterParams: { clearButton: true }, width: 120},
+    {
+      headerName: 'Action',
+      cellRenderer: 'buttonRenderer',
+      cellRendererParams: {
+        onEdit: this.gridEdit.bind(this),
+        onDelete: this.gridRemove.bind(this)
+      }
+    }
   ];
   rowData = [];
 
@@ -35,7 +48,11 @@ export class BotMenuComponent implements OnInit {
     private crudeService: CrudeService,
     private confirmDialogService: ConfirmDialogService,
     private notificationSvc: NotificationService
-  ) {}
+  ) {
+    this.frameworkComponents = {
+      buttonRenderer: ButtonRendererComponent
+    };
+  }
 
   ngOnInit() {
     this.generateForm();
@@ -44,9 +61,10 @@ export class BotMenuComponent implements OnInit {
 
   generateForm() {
     this.botMenuForm = new FormGroup({
+      _id: new FormControl(''),
       menuId: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
       menuType: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
-      image: new FormControl('', { updateOn: 'blur' }),
+      file: new FormControl(null, { updateOn: 'blur' }),
       text: new FormControl('', { updateOn: 'blur' }),
       option1: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
       option2: new FormControl('', { updateOn: 'blur' }),
@@ -70,9 +88,19 @@ export class BotMenuComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     if (this.botMenuForm.valid) {
-      if (!this.botMenuForm.value.id) {
+      const formData = new FormData();
+      formData.append('menuId', this.botMenuForm.value.menuId);
+      formData.append('menuType', this.botMenuForm.value.menuType);
+      formData.append('file', this.botMenuForm.value.file);
+      formData.append('text', this.botMenuForm.value.text);
+      formData.append('option1', this.botMenuForm.value.option1);
+      formData.append('option2', this.botMenuForm.value.option2);
+      formData.append('option3', this.botMenuForm.value.option3);
+      formData.append('option4', this.botMenuForm.value.option4);
+      formData.append('option5', this.botMenuForm.value.option5);
+      if (!this.botMenuForm.value._id) {
         this.crudeService
-          .create('menu/add', this.botMenuForm.value)
+          .createWithHeader('menu/add', formData)
           .subscribe((res: any) => {
             if (res.statusCode === '200') {
               this.notificationSvc.success('Nice', 'Bot Menu added successfully');
@@ -84,10 +112,11 @@ export class BotMenuComponent implements OnInit {
             }
           });
       } else {
-        this.crudeService
+        if (typeof(this.botMenuForm.value.file) !== 'object') {
+          this.crudeService
           .update(
             'menu/update',
-            this.botMenuForm.value.id,
+            this.botMenuForm.value._id,
             this.botMenuForm.value
           )
           .subscribe((res: any) => {
@@ -100,11 +129,30 @@ export class BotMenuComponent implements OnInit {
               this.reset();
             }
           });
+        } else {
+          this.crudeService
+          .updateWithHeader(
+            'menu/update',
+            this.botMenuForm.value._id,
+            formData
+          )
+          .subscribe((res: any) => {
+            if (res.statusCode === '200') {
+              this.notificationSvc.success('Nice', 'Bot Menu updated successfully');
+              this.getBotMenus();
+              this.reset();
+            } else {
+              this.notificationSvc.error('Failure', 'Bot Menu updation failed !');
+              this.reset();
+            }
+          });
+        }
       }
     }
   }
 
   gridEdit(dataItem) {
+    this.localUrl = configuation.url + 'menuImages/' + dataItem.file;
     this.edit = true;
     this.botMenuForm.patchValue(dataItem);
     this.isNew = false;
@@ -115,9 +163,9 @@ export class BotMenuComponent implements OnInit {
     this.confirmDialogService.confirmThis(
       'Are you sure to delete?',
       () => {
-        context.crudeService.delete('menu/remove', dataItem.id).subscribe(data => {
+        context.crudeService.delete('menu/remove', dataItem._id).subscribe(data => {
           context.notificationSvc.success(
-            'info',
+            'Info',
             'Bot Menu deleted successfully'
           );
           context.getBotMenus();
@@ -125,6 +173,18 @@ export class BotMenuComponent implements OnInit {
       },
       () => {}
     );
+  }
+
+  onFileChange(event) {
+    if (event.target.files.length > 0) {
+      const reader = new FileReader();
+      const file = event.target.files[0];
+      this.botMenuForm.controls.file.setValue(file);
+      reader.onload = (event: any) => {
+          this.localUrl = event.target.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
   }
 
   reset() {
