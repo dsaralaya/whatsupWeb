@@ -1,5 +1,6 @@
 export const configuation = {
-    serverURL: 'http://localhost:3000/api'
+    serverURL: 'http://localhost:3000/api',
+    url:'http://localhost:3000'
 };
 
 export const constants = {

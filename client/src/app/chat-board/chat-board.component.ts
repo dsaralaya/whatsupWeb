@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from '../shared/service/chat.service';
 import { AuthenticationService } from '../shared/service/auth.service';
 import { Router } from '@angular/router';
+import { CrudeService } from '../shared/service/crud.service';
 
 class ImageSnippet {
   constructor(public src: string, public file: File) { }
@@ -22,8 +23,10 @@ export class ChatBoardComponent implements OnInit {
   file: any;
   page = 0;
   isLoad = true;
+  senderList = [];
 
-  constructor(private chat: ChatService, private authService: AuthenticationService, private router: Router) {
+  constructor(private chat: ChatService, private authService: AuthenticationService,
+              private router: Router, private crudeService: CrudeService) {
     const currentUser = this.authService.currentUserValue;
     if (currentUser === null) {
       this.router.navigate(['/login']);
@@ -31,12 +34,21 @@ export class ChatBoardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.formatMessage();
-
+    this.crudeService.getBy(`chathistory/show`,`${this.authService.currentUserValue.id}`).subscribe((resp: any) => {
+      console.log(resp.data);
+      if (resp.data) {
+        this.senderList = resp.data.map((item) => {
+          return item.senderId;
+        });
+      }
+      this.formatMessage();
+    });
     this.chat.getMessage().subscribe(msg => {
       if (msg) {
         console.log(msg);
-        this.pushMessage(msg);
+        if (this.senderList.find((t) => t === msg.sender)){
+          this.pushMessage(msg);
+        }
       }
     });
   }
@@ -137,17 +149,19 @@ export class ChatBoardComponent implements OnInit {
       if (json) {
         json = json.reverse();
         json.forEach(element => {
-          element.sender = element.sdr_rcv;
-          const sender = this.chatbox.find((t) => t.sender == element.sdr_rcv);
-          if (sender) {
-            if (!sender.listMessage) {
-              sender.listMessage = [];
+          if (this.senderList.find((t) => t === element.sdr_rcv)) {
+            element.sender = element.sdr_rcv;
+            const sender = this.chatbox.find((t) => t.sender == element.sdr_rcv);
+            if (sender) {
+              if (!sender.listMessage) {
+                sender.listMessage = [];
+              }
+              sender.listMessage.push(element);
+            } else {
+              // tslint:disable-next-line: max-line-length
+              this.chatbox.push({ img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`, sender: element.sdr_rcv, listMessage: [element] });
             }
-            sender.listMessage.push(element);
-          } else {
-            // tslint:disable-next-line: max-line-length
-            this.chatbox.push({ img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`, sender: element.sdr_rcv, listMessage: [element] });
-          }
+           }
         });
         this.getMessages(this.chatbox[0]);
       }
@@ -182,12 +196,13 @@ export class ChatBoardComponent implements OnInit {
       }
     });
   }
-
-
-
-
   logout() {
     this.authService.logout();
+  }
+
+  endChat(){
+    this.crudeService.update(`endchat`,this.activatedSender,{}).subscribe((resp: any) => {
+    });
   }
 
 

@@ -10,7 +10,7 @@ import ImageHistoryController from '../ImageHistory/imageHistory.controller';
 import Menu from '../Menu/menu.model';
 import User from '../../common/model/user.model';
 const myCache = new NodeCache();
-const URL = 'http://ca70954a.ngrok.io';
+const URL = 'http://9916aaaa.ngrok.io';
 export default class ChatController {
 
     public async receive(req: Request, res: Response) {
@@ -25,20 +25,25 @@ export default class ChatController {
             var isfirst = await this.savechatHistory(res.req.body.sender);
             //first message
             if (!isfirst) {
-                Menu.findOne({ menuId: "1" }).then((data: any) => {
-                    if (data) {
-                        var msg = 'Please select options: ' + data.option1 + '  ' + data.option2 + ' ' + data.option3 + ' ' + data.option4
-                        if (data.menuType == 'image') {
+                // * message show notification
+                if (res.req.body.message === '*') {
+                    this.checkmenu(res.req.body.message, isfirst['menuId'], res.req.body.sender, res.req.body);
+                } else {
+                    Menu.findOne({ menuId: "1" }).then((data: any) => {
+                        if (data) {
+                            var msg = data.text;
+                            if (data.menuType.toLowerCase() == 'image') {
 
-                            var reqq = { file: { filename: `${URL}/menu.jpg` }, body: { return: true, type: "image", message: msg, recipient: res.req.body.sender } }
-                            this.sendMessage(reqq, '');
-                        } else {
+                                var reqq = { file: { filename: `menuImages/${data.file}` }, body: { return: true, type: "image", message: msg, recipient: res.req.body.sender } }
+                                this.sendMessage(reqq, '');
+                            } else {
 
-                            var textreqq = { body: { return: true, type: "text", message: msg, sender: res.req.body.sender } }
-                            this.sendMessage(textreqq, '');
+                                var textreqq = { body: { return: true, type: "text", message: msg, sender: res.req.body.sender } }
+                                this.sendMessage(textreqq, '');
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
             }
             //checking already assigned
@@ -49,9 +54,6 @@ export default class ChatController {
             else {
                 io.emit('message', res.req.body);
             }
-
-
-
             return res.status(200);
         } else {
             io.emit('message', res.req.body);
@@ -59,49 +61,51 @@ export default class ChatController {
     }
 
     private async checkmenu(option, menuId, sender, res) {
-        await Menu.findOne({ menuId: menuId })
-            .then(menu => {
-                if (menu) {
-                    if (menu[`option${option}`]) {
-                        var selected = menu[`option${option}`];
-                        //if option is support or sales
-                        if (selected.toLowerCase() === 'support' || selected.toLowerCase() === 'sales') {
-                            //find the leat user value
-                            User.find().or([{ userRole: 'support' } || { userRole: 'sales' }])
-                                .sort("assignedChatCount")
-                                .limit(1).exec((error, data: any) => {
-                                    //update the count
-                                    if (data.length > 0) {
-                                        User.findOneAndUpdate({ name: data[0].name }, { $set: { assignedChatCount: data[0].assignedChatCount + 1 } }).then((doc) => {
-                                            console.log('user' + doc);
-                                        });
-                                        chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { assignedTo: data[0].name } }).then((doc) => {
-                                            console.log('history' + doc);
-                                        });
-                                        io.emit('message', res);
-                                    }
-                                });
+        var menu = await Menu.findOne({ menuId: menuId });
 
-                        } else {
-                            Menu.findOne({ menuId: selected }).then((data: any) => {
-                                if (data) {
-                                    var msg = 'Please select options: ' + data.option1 + '  ' + data.option2 + ' ' + data.option3 + ' ' + data.option4
-                                    if (data.menuType == 'image') {
-
-                                        var reqq = { file: { filename: `${URL}/menu.jpg` }, body: { return: true, type: "image", message: msg, recipient: sender } }
-                                        this.sendMessage(reqq, '');
-                                    } else {
-
-                                        var textreqq = { body: { return: true, type: "text", message: msg, sender: sender } }
-                                        this.sendMessage(textreqq, '');
-                                    }
-
-                                }
-                            });
-                        }
+        if (menu) {
+            if (menu[`option${option}`]) {
+                var selected = menu[`option${option}`];
+                //if option is support or sales
+                if (selected.toLowerCase() === 'support' || selected.toLowerCase() === 'sales') {
+                    //find the leat user value
+                    var usr = await User.find().or([{ userRole: 'support' } || { userRole: 'sales' }])
+                        .sort("assignedChatCount")
+                        .limit(1).exec();
+                    //update the count
+                    if (usr.length > 0) {
+                        await User.findOneAndUpdate({ _id: usr[0]._id }, { $set: { assignedChatCount: usr[0]['assignedChatCount'] + 1 } }).then((doc) => {
+                            console.log('user' + doc);
+                        });
+                        await chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { assignedTo: usr[0]._id } }).then((doc) => {
+                            console.log('history' + doc);
+                        });
+                        io.emit('message', res);
                     }
+
+                } else {
+                    var menu=await Menu.findOne({ menuId: selected });
+                    if (menu) {
+                        var msg = menu['text'];
+                        console.log(menu['file'])
+                        await chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { menuId: selected } });
+                        if (menu['menuType'].toLowerCase() == 'image') {
+                            
+                            var reqq = { file: { filename: `menuImages/${menu['file']}` }, body: { return: true, type: "image", message: msg, recipient: sender } }
+                                await this.sendMessage(reqq, '');
+                            } else {
+
+                                var textreqq = { body: { return: true, type: "text", message: msg, sender: sender } }
+                               await this.sendMessage(textreqq, '');
+                            }
+                           
+
+                        }
+                   
                 }
-            });
+            }
+        }
+
 
     }
 

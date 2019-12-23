@@ -19,7 +19,7 @@ export default class ChatHistoryController {
   }
 
   public async getbyid(req: Request, res: Response) {
-    chatHistory.findOne({ assignedTo: req.params.id })
+    chatHistory.find({ assignedTo: req.params.id })
       .then(chathistory => {
         if (!chathistory) {
           return res.send({
@@ -48,6 +48,10 @@ export default class ChatHistoryController {
       await chathistory.save();
       return null;
     }
+  }
+  public async endchat(req: Request, res: Response) {
+    await chatHistory.findOneAndUpdate({ assignedTo: req.params.id},{ $set: { assignedTo:''}});
+    res.send({ status: "success", statusCode: "200" });
   }
 
   public async update(req: Request, res: Response) {
