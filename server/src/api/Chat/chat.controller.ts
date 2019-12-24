@@ -10,7 +10,7 @@ import ImageHistoryController from '../ImageHistory/imageHistory.controller';
 import Menu from '../Menu/menu.model';
 import User from '../../common/model/user.model';
 const myCache = new NodeCache();
-const URL = 'http://8b794f1f.ngrok.io';
+const URL = 'http://73e986d8.ngrok.io';
 export default class ChatController {
 
     public async receive(req: Request, res: Response) {
@@ -27,7 +27,7 @@ export default class ChatController {
             if (!isfirst) {
                 // * message show notification
                 if (res.req.body.message === '*') {
-                    this.checkmenu(res.req.body.message, isfirst['menuId'], res.req.body.sender, res.req.body);
+                    this.checkmenu(res.req.body.message, "1", res.req.body.sender, res.req.body,true,io);
                 } else {
                     Menu.findOne({ menuId: "1" }).then((data: any) => {
                         if (data) {
@@ -48,7 +48,7 @@ export default class ChatController {
             }
             //checking already assigned
             else if (!isfirst['assignedTo']) {
-                this.checkmenu(res.req.body.message, isfirst['menuId'], res.req.body.sender, res.req.body);
+                this.checkmenu(res.req.body.message, isfirst['menuId'], res.req.body.sender, res.req.body,false,io);
             }
             //other emit message
             else {
@@ -60,29 +60,24 @@ export default class ChatController {
         }
     }
 
-    private async checkmenu(option, menuId, sender, res) {
+    private async checkmenu(option, menuId, sender, res,redirect,socket) {
         var menu = await Menu.findOne({ menuId: menuId });
 
         if (menu) {
-            if (menu[`option${option}`]) {
+            if (menu[`option${option}`] || redirect) {
                 var selected = menu[`option${option}`];
                 //if option is support or sales
-                if (selected.toLowerCase() === 'support' || selected.toLowerCase() === 'sales') {
+                if (redirect || selected.toLowerCase() === 'support' || selected.toLowerCase() === 'sales') {
                     //find the leat user value
                     var usr = await User.find().or([{ userRole: 'support' } || { userRole: 'sales' }])
                         .sort("assignedChatCount")
                         .limit(1).exec();
                     //update the count
                     if (usr.length > 0) {
-                        await User.findOneAndUpdate({ _id: usr[0]._id }, { $set: { assignedChatCount: usr[0]['assignedChatCount'] + 1 } }).then((doc) => {
-                            console.log('user' + doc);
-                        });
-                        await chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { assignedTo: usr[0]._id } }).then((doc) => {
-                            console.log('history' + doc);
-                        });
-                        res.message = 'HI';
-                        io.emit('switch', { user_id: usr[0]._id, msg: res });
-
+                        await User.findOneAndUpdate({ _id: usr[0]._id }, { $set: { assignedChatCount: usr[0]['assignedChatCount'] + 1 } });
+                        await chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { assignedTo: usr[0]._id } });
+                       // res.message = 'HI';
+                        socket.emit('switch', { user_id: usr[0]._id, msg: res });
                     }
 
                 } else {
@@ -135,19 +130,20 @@ export default class ChatController {
                     return error;
                 });
         } else {
+            var path = request.return ? 'menuImages' : 'chatImages';
             await axios({
                 url: `https://app.interativachat.com.br/api/message/sendImage`,
-                data: `client_id=${cred.client_id}&secret=${cred.secret}&legend=${request.message}&device_id=${cred.device_id}&recipient=${request.recipient}&type=image&file_url=${URL}/${req.file.filename}`,
+                data: `client_id=${cred.client_id}&secret=${cred.secret}&legend=${request.message}&device_id=${cred.device_id}&recipient=${request.recipient}&type=image&file_url=${URL}/${path}/${req.file.filename}`,
                 method: 'post',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 
             }).then((resp) => {
                 var data = resp.data.messages;
                 var img = new ImageHistoryController();
-                img.create({ message_id: data.message_id, path: req.file.filename });
+                img.create({ message_id: data.message_id, path: path+'/'+req.file.filename });
 
                 if (data.length > 0) {
-                    data[0].path = `${URL}/${req.file.filename}`;
+                    data[0].path = `${URL}/${path}/${req.file.filename}`;
                 }
                 if (request.return) {
                     return true;
@@ -165,7 +161,7 @@ export default class ChatController {
         var cred = appConfig.get('intractiveAPI');
         var date = new Date().toISOString().split('T')[0];
         const response = await axios({
-            url: `https://app.interativachat.com.br/api/messages?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}`,
+            url: `https://app.interativachat.com.br/api/messages?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&limit=10&sdr_rcv=${req.params.id}&page=0`,
             method: 'get'
         }).then((resp: any) => {
             return res.status(200).json(resp.data.messages);
@@ -179,14 +175,14 @@ export default class ChatController {
         var cred = appConfig.get('intractiveAPI');
         var date = new Date().toISOString().split('T')[0];
         const response = await axios({
-            url: `https://app.interativachat.com.br/api/messages?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&sdr_rcv=${req.body.sdr_rcv}&page=${req.body.page}`,
+            url: `https://app.interativachat.com.br/api/messages?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&sdr_rcv=${req.body.sdr_rcv}&page=${req.body.page}&limit=10`,
             method: 'get'
         }).then((resp: any) => {
             return res.status(200).json(resp.data.messages);
         })
-            .catch((error) => {
-                console.error(error)
-            });
+        .catch((error) => {
+            console.error(error)
+        });
     }
 
 }

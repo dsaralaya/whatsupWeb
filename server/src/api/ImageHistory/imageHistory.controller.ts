@@ -17,6 +17,10 @@ export default class ImageHistoryController {
         });
       });
   }
+  public async getIdList(req: Request, res: Response){
+    var img = await ImageHistory.find({ messageId: { $in:req.params.id}});
+    return img;
+  }
 
   public async getbyid(req: Request, res: Response) {
     ImageHistory.findById(req.params.id)
