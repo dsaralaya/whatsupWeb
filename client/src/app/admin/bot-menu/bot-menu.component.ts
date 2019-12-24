@@ -92,12 +92,12 @@ export class BotMenuComponent implements OnInit {
       formData.append('menuId', this.botMenuForm.value.menuId);
       formData.append('menuType', this.botMenuForm.value.menuType);
       formData.append('file', this.botMenuForm.value.file);
-      formData.append('text', this.botMenuForm.value.text);
+      formData.append('text', this.botMenuForm.value.text === null ? '' : this.botMenuForm.value.text);
       formData.append('option1', this.botMenuForm.value.option1);
-      formData.append('option2', this.botMenuForm.value.option2);
-      formData.append('option3', this.botMenuForm.value.option3);
-      formData.append('option4', this.botMenuForm.value.option4);
-      formData.append('option5', this.botMenuForm.value.option5);
+      formData.append('option2', this.botMenuForm.value.option2 === null ? '' : this.botMenuForm.value.option2);
+      formData.append('option3', this.botMenuForm.value.option3 === null ? '' : this.botMenuForm.value.option3);
+      formData.append('option4', this.botMenuForm.value.option4 === null ? '' : this.botMenuForm.value.option4);
+      formData.append('option5', this.botMenuForm.value.option5 === null ? '' : this.botMenuForm.value.option5);
       if (!this.botMenuForm.value._id) {
         this.crudeService
           .createWithHeader('menu/add', formData)
@@ -173,6 +173,11 @@ export class BotMenuComponent implements OnInit {
       },
       () => {}
     );
+  }
+
+  onMenuTypeChanged(event) {
+    this.localUrl = '';
+    this.botMenuForm.controls.text.setValue('');
   }
 
   onFileChange(event) {

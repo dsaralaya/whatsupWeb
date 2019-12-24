@@ -38,7 +38,7 @@ export class CrudeService {
     }
 
     updateWithHeader(model: any, id: any, objToUpdate: any): Observable<any> {
-        return this.http.put<any>(`${this.endpoint}/${model}/${id}`, JSON.stringify(objToUpdate), { headers: this.getHeadersWithType()});
+        return this.http.put<any>(`${this.endpoint}/${model}/${id}`, objToUpdate, { headers: this.getHeadersWithType()});
     }
 
     updateByAction(model: any, id: any, action: any, objToUpdate: any): Observable<any> {

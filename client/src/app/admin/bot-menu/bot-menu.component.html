@@ -62,7 +62,7 @@
                      <div class="col-md-4">
                            <div class="form-group">
                               <label class="d-block required">Menu Type</label>
-                              <ng-select [items]="menuType" bindLabel="name" bindValue="value" name="menuType" formControlName="menuType">
+                              <ng-select [items]="menuType" (change)="onMenuTypeChanged($event)" bindLabel="name" bindValue="value" name="menuType" formControlName="menuType">
                                  </ng-select>
                               <error-message label="Menu Type" [submitted]="submitted" controlName="menuType">
                               </error-message>
@@ -81,10 +81,10 @@
                     </div>
                  </div>
      
-                 <div class="col-md-4" *ngIf="botMenuForm.controls.menuType.value === 'Text' || botMenuForm.controls.menuType.value === 'ImageText'">
+                 <div class="col-md-12" *ngIf="botMenuForm.controls.menuType.value === 'Text' || botMenuForm.controls.menuType.value === 'ImageText'">
                     <div class="form-group">
                        <label class="d-block required">Text</label>
-                       <input type="text" class="form-control" name="text" formControlName="text">
+                       <textarea type="text" class="form-control" name="text" formControlName="text"></textarea>
                        <error-message label="Text" [submitted]="submitted" controlName="text">
                        </error-message>
                     </div>

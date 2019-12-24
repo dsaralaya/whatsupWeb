@@ -85,11 +85,11 @@ export default class MenuController {
   public async update(req: Request, res: Response) {
     await this.getfilebyid(req).then(function(result:any)
     {
-      if (req.files && result.data.file !== "") {
+      if (req.file && result.data.file !== "") {
         var deleteImage = new UploadImagesController();
         deleteImage.delete(result.data.file);
-        //req.body['file'] = '';
       }
+      req.body['file'] = req.file ? req.file.filename : '';
     Menu.findByIdAndUpdate(req.params.id, req.body, { new: true })
       .then(menu => {
         if (!menu) {
