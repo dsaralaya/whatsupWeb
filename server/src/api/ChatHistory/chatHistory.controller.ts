@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import chatHistory from "./chatHistory.model";
+import User from "../../common/model/user.model";
 const _ = require("lodash");
 
 export default class ChatHistoryController {
@@ -50,7 +51,11 @@ export default class ChatHistoryController {
     }
   }
   public async endchat(req: Request, res: Response) {
-    await chatHistory.findOneAndUpdate({ assignedTo: req.params.id},{ $set: { assignedTo:''}});
+    var history = await chatHistory.findOne({ senderId: req.params.id });
+    await chatHistory.findByIdAndRemove(history._id);
+    var user = await User.findOne({ _id: history['assignedTo'] })
+    await User.findOneAndUpdate({ _id: user._id }, { $set: { assignedChatCount: user['assignedChatCount'] - 1 } });
+
     res.send({ status: "success", statusCode: "200" });
   }
 

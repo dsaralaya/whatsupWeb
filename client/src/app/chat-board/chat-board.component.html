@@ -74,21 +74,36 @@
 
             <!-- Navbar -->
             <div class="row d-flex flex-row align-items-center p-2 m-0 w-100" id="navbar">
+
                 <div class="d-block d-sm-none">
                     <i class="fas fa-arrow-left p-2 mr-2 text-white" style="font-size: 1.5rem; cursor: pointer;"></i>
                 </div>
-                <img src="{{activatedSenderImg}}" alt="Profile Photo" class="img-fluid rounded-circle mr-2"
-                    style="height:50px;" id="pic">
-                <div class="d-flex flex-column">
-                    <div class="text-white font-weight-bold" id="name">{{activatedSender}}</div>
+                <ng-container *ngIf="messageList.length>0">
+                    <img src="{{activatedSenderImg}}" alt="Profile Photo" class="img-fluid rounded-circle mr-2"
+                        style="height:50px;" id="pic">
+                    <div class="d-flex flex-column">
+                        <div class="text-white font-weight-bold" id="name">{{activatedSender}}</div>
 
-                </div>
-                <div class="d-flex flex-row align-items-center ml-auto">
-                    <label class="fileupload"><i class="fas fa-paperclip mx-3 text-white d-none d-md-block"></i>
-                        <input #imageInput type="file" class="d-none" accept="image/*"
-                            (change)="processFile(imageInput)">
-                    </label>
-                </div>
+                    </div>
+                    <div class="d-flex flex-row align-items-center ml-auto">
+                        <label class="fileupload"><i class="fas fa-paperclip mx-3 text-white d-none d-md-block"></i>
+                            <input #imageInput type="file" class="d-none" accept="image/*"
+                                (change)="processFile(imageInput)">
+                        </label>
+                    </div>
+                    <div class="nav-item dropdown mr-5 endchat">
+                        <a class="nav-link dropdown-toggle" (click)="entoggle=!entoggle" data-toggle="dropdown"
+                            href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false"><i
+                                class="fas fa-ellipsis-v text-white"></i></a>
+                        <div *ngIf="entoggle" class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
+                            style="position: absolute; transform: translate3d(38px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+
+                            <a class="dropdown-item" href="javascript:void(0);"
+                                (click)="endChat();entoggle=!entoggle">End
+                                Chat</a>
+                        </div>
+                    </div>
+                </ng-container>
             </div>
 
             <!-- Messages -->
@@ -132,7 +147,7 @@
 
             <!-- Input -->
 
-            <div id="input-area">
+            <div id="input-area" *ngIf="messageList.length>0">
                 <div class="justify-self-end align-items-center flex-row d-flex " *ngIf="selectedFile">
                     <div class="imgupper" *ngIf="selectedFile">
                         <div class="imginner">

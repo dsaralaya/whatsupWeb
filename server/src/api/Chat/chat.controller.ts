@@ -10,7 +10,7 @@ import ImageHistoryController from '../ImageHistory/imageHistory.controller';
 import Menu from '../Menu/menu.model';
 import User from '../../common/model/user.model';
 const myCache = new NodeCache();
-const URL = 'http://9916aaaa.ngrok.io';
+const URL = 'http://8b794f1f.ngrok.io';
 export default class ChatController {
 
     public async receive(req: Request, res: Response) {
@@ -80,28 +80,30 @@ export default class ChatController {
                         await chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { assignedTo: usr[0]._id } }).then((doc) => {
                             console.log('history' + doc);
                         });
-                        io.emit('message', res);
+                        res.message = 'HI';
+                        io.emit('switch', { user_id: usr[0]._id, msg: res });
+
                     }
 
                 } else {
-                    var menu=await Menu.findOne({ menuId: selected });
+                    var menu = await Menu.findOne({ menuId: selected });
                     if (menu) {
                         var msg = menu['text'];
                         console.log(menu['file'])
                         await chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { menuId: selected } });
                         if (menu['menuType'].toLowerCase() == 'image') {
-                            
+
                             var reqq = { file: { filename: `menuImages/${menu['file']}` }, body: { return: true, type: "image", message: msg, recipient: sender } }
-                                await this.sendMessage(reqq, '');
-                            } else {
+                            await this.sendMessage(reqq, '');
+                        } else {
 
-                                var textreqq = { body: { return: true, type: "text", message: msg, sender: sender } }
-                               await this.sendMessage(textreqq, '');
-                            }
-                           
-
+                            var textreqq = { body: { return: true, type: "text", message: msg, sender: sender } }
+                            await this.sendMessage(textreqq, '');
                         }
-                   
+
+
+                    }
+
                 }
             }
         }

@@ -26,7 +26,7 @@ export class ChatBoardComponent implements OnInit {
   senderList = [];
 
   constructor(private chat: ChatService, private authService: AuthenticationService,
-              private router: Router, private crudeService: CrudeService) {
+    private router: Router, private crudeService: CrudeService) {
     const currentUser = this.authService.currentUserValue;
     if (currentUser === null) {
       this.router.navigate(['/login']);
@@ -34,7 +34,7 @@ export class ChatBoardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.crudeService.getBy(`chathistory/show`,`${this.authService.currentUserValue.id}`).subscribe((resp: any) => {
+    this.crudeService.getBy(`chathistory/show`, `${this.authService.currentUserValue.id}`).subscribe((resp: any) => {
       console.log(resp.data);
       if (resp.data) {
         this.senderList = resp.data.map((item) => {
@@ -43,10 +43,17 @@ export class ChatBoardComponent implements OnInit {
       }
       this.formatMessage();
     });
+    this.chat.redirectUser().subscribe(d => {
+      console.log('icoming message')
+      if (d && this.authService.currentUserValue.id === d.user_id) {
+        this.senderList.push(d.msg.senderId);
+        this.pushMessage(d.msg);
+      }
+    });
     this.chat.getMessage().subscribe(msg => {
       if (msg) {
         console.log(msg);
-        if (this.senderList.find((t) => t === msg.sender)){
+        if (this.senderList.find((t) => t === msg.sender)) {
           this.pushMessage(msg);
         }
       }
@@ -87,6 +94,9 @@ export class ChatBoardComponent implements OnInit {
             sender: sid, img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
             count: 1, listMessage: [msg]
           });
+          if (this.chatbox.length === 1) {
+            this.getMessages(this.chatbox[0]);
+          }
         }
       } else {
         this.chatbox.push({
@@ -98,17 +108,19 @@ export class ChatBoardComponent implements OnInit {
   }
 
   getMessages(item) {
-    this.selectedFile = null;
-    this.page = 0;
-    this.isLoad = true;
-    this.activatedSender = item.sender;
-    this.activatedSenderImg = item.img;
-    if (this.chatbox && this.chatbox.length > 0) {
-      const sender = this.chatbox.find((t) => t.sender === item.sender);
-      if (sender) {
-        this.messageList = [];
-        sender.count = 0;
-        this.messageList = sender.listMessage;
+    if (item) {
+      this.selectedFile = null;
+      this.page = 0;
+      this.isLoad = true;
+      this.activatedSender = item.sender;
+      this.activatedSenderImg = item.img;
+      if (this.chatbox && this.chatbox.length > 0) {
+        const sender = this.chatbox.find((t) => t.sender === item.sender);
+        if (sender) {
+          this.messageList = [];
+          sender.count = 0;
+          this.messageList = sender.listMessage;
+        }
       }
     }
   }
@@ -161,7 +173,7 @@ export class ChatBoardComponent implements OnInit {
               // tslint:disable-next-line: max-line-length
               this.chatbox.push({ img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`, sender: element.sdr_rcv, listMessage: [element] });
             }
-           }
+          }
         });
         this.getMessages(this.chatbox[0]);
       }
@@ -200,8 +212,16 @@ export class ChatBoardComponent implements OnInit {
     this.authService.logout();
   }
 
-  endChat(){
-    this.crudeService.update(`endchat`,this.activatedSender,{}).subscribe((resp: any) => {
+  endChat() {
+    this.crudeService.update(`chathistory/endchat`, this.activatedSender, {}).subscribe((resp: any) => {
+      this.senderList = this.senderList.filter((t) => t != this.activatedSender);
+      this.chatbox = this.chatbox.filter((t) => t.sender != this.activatedSender);
+      if (this.chatbox.length > 0) {
+        this.getMessages(this.chatbox[0]);
+      } else {
+        this.messageList = [];
+        this.activatedSender = '';
+      }
     });
   }
 
