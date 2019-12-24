@@ -16,11 +16,11 @@ const server = http.createServer(Express);
 
 let io = socketIO(server);
 io.on('connect', (socket: any) => {
-    console.log('Connected client on port %s.', this.port);
+    console.log('Connected client on port 3000');
     socket.on('disconnect', () => {
         console.log('Client disconnected');
     });
 });
 io.attach(server);
- server.listen(port);
+server.listen(port);
 export default io;

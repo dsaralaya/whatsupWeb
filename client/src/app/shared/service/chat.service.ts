@@ -30,8 +30,8 @@ export class ChatService {
       .fromEvent<any>('switch');
   }
 
-  getAllMessage() {
-    return this.http.get(`${this.serverURL}/api/chat/getall`);
+  getAllMessage(sender) {
+    return this.http.get(`${this.serverURL}/api/chat/getall?id=${sender}`);
   }
 
   loadMoreMessage(sender, page) {

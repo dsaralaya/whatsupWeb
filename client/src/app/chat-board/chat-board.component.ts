@@ -26,7 +26,7 @@ export class ChatBoardComponent implements OnInit {
   senderList = [];
 
   constructor(private chat: ChatService, private authService: AuthenticationService,
-    private router: Router, private crudeService: CrudeService) {
+              private router: Router, private crudeService: CrudeService) {
     const currentUser = this.authService.currentUserValue;
     if (currentUser === null) {
       this.router.navigate(['/login']);
@@ -41,13 +41,15 @@ export class ChatBoardComponent implements OnInit {
           return item.senderId;
         });
       }
-      this.formatMessage();
+      this.formatMessage(this.senderList);
     });
     this.chat.redirectUser().subscribe(d => {
-      console.log('icoming message')
+      console.log('icoming message');
       if (d && this.authService.currentUserValue.id === d.user_id) {
         this.senderList.push(d.msg.senderId);
         this.pushMessage(d.msg);
+        const audio = new Audio('/assets/sound/notification.mp3');
+        audio.play();
       }
     });
     this.chat.getMessage().subscribe(msg => {
@@ -103,12 +105,16 @@ export class ChatBoardComponent implements OnInit {
           sender: sid, listMessage: [msg],
           img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`
         });
+        if (this.chatbox.length === 1) {
+          this.getMessages(this.chatbox[0]);
+        }
       }
     }
   }
 
   getMessages(item) {
     if (item) {
+      this.crudeService.getBy(`chat/getall`, item.sender).subscribe((json: any) => {
       this.selectedFile = null;
       this.page = 0;
       this.isLoad = true;
@@ -119,11 +125,33 @@ export class ChatBoardComponent implements OnInit {
         if (sender) {
           this.messageList = [];
           sender.count = 0;
+          sender.listMessage = json.reverse();
           this.messageList = sender.listMessage;
+          this.loadImages(this.messageList);
+         
         }
       }
+    });
     }
   }
+  loadImages(list){
+    let imgarray = list.filter((t) => t.type === 'image');
+    if (imgarray.length > 0) {
+      const arr = imgarray.map((item) => {
+        return item.id;
+      });
+      var arrStr = encodeURIComponent(JSON.stringify(arr));
+      this.crudeService.getBy(`imagehistory/get`, arrStr).subscribe((data) => {
+        if (data) {
+          data.forEach(element => {
+            const img = list.find((t) => t.id === element.messageId);
+            img.path = element.path;
+          });
+        }
+      });
+    }
+  }
+
   checkDate(list, index, date) {
     if (index != 0) {
       return list.slice(0, index).find((t) => t.date.split(' ')[0] === date.split(' ')[0]);
@@ -155,30 +183,13 @@ export class ChatBoardComponent implements OnInit {
     }
   }
 
-  formatMessage() {
+  formatMessage(sender) {
     this.chatbox = [];
-    this.chat.getAllMessage().subscribe((json: any) => {
-      if (json) {
-        json = json.reverse();
-        json.forEach(element => {
-          if (this.senderList.find((t) => t === element.sdr_rcv)) {
-            element.sender = element.sdr_rcv;
-            const sender = this.chatbox.find((t) => t.sender == element.sdr_rcv);
-            if (sender) {
-              if (!sender.listMessage) {
-                sender.listMessage = [];
-              }
-              sender.listMessage.push(element);
-            } else {
-              // tslint:disable-next-line: max-line-length
-              this.chatbox.push({ img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`, sender: element.sdr_rcv, listMessage: [element] });
-            }
-          }
+    sender.forEach(element => {
+         this.chatbox.push({ img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
+         sender: element, listMessage: [] });
         });
-        this.getMessages(this.chatbox[0]);
-      }
-    });
-
+    this.getMessages(this.chatbox[0]);
   }
 
   processFile(imageInput: any) {
@@ -197,10 +208,12 @@ export class ChatBoardComponent implements OnInit {
       if (data && data.length > 0) {
         const sender = this.chatbox.find((t) => t.sender === this.activatedSender);
         if (sender) {
-          data = data.reverse();
-          data.forEach(d => {
+         //data = data.reverse();
+         data.forEach(d => {
             sender.listMessage.unshift(d);
           });
+          this.loadImages(sender.listMessage);
+
 
         }
       } else {
@@ -208,6 +221,7 @@ export class ChatBoardComponent implements OnInit {
       }
     });
   }
+
   logout() {
     this.authService.logout();
   }
