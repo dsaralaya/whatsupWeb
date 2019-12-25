@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import ImageHistory from "./imageHistory.model";
+import { appConfig } from "../../config/appConfig";
 const _ = require("lodash");
-
+const url = appConfig.get('siteURL');
 export default class ImageHistoryController {
   public async getall(req: Request, res: Response) {
     return ImageHistory.find()
@@ -17,9 +18,12 @@ export default class ImageHistoryController {
         });
       });
   }
-  public async getIdList(req: Request, res: Response){
-    var img = await ImageHistory.find({ messageId: { $in:req.params.id}});
-    return img;
+  public async getIdList(req: Request, res: Response) {
+    var img = await ImageHistory.find({ messageId: { $in: JSON.parse(req.params.id) } });
+    for (var i = 0; i < img.length; i++) {
+      img[i]['image'] = url + '/' + img[i]['image'];
+    }
+    return res.send(img);
   }
 
   public async getbyid(req: Request, res: Response) {

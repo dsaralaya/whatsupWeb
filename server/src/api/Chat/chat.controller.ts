@@ -10,7 +10,7 @@ import ImageHistoryController from '../ImageHistory/imageHistory.controller';
 import Menu from '../Menu/menu.model';
 import User from '../../common/model/user.model';
 const myCache = new NodeCache();
-const URL = 'http://73e986d8.ngrok.io';
+const URL = appConfig.get('siteURL');
 export default class ChatController {
 
     public async receive(req: Request, res: Response) {
@@ -27,7 +27,7 @@ export default class ChatController {
             if (!isfirst) {
                 // * message show notification
                 if (res.req.body.message === '*') {
-                    this.checkmenu(res.req.body.message, "1", res.req.body.sender, res.req.body,true,io);
+                    this.checkmenu(res.req.body.message, "1", res.req.body.sender, res.req.body, true, io);
                 } else {
                     Menu.findOne({ menuId: "1" }).then((data: any) => {
                         if (data) {
@@ -48,7 +48,7 @@ export default class ChatController {
             }
             //checking already assigned
             else if (!isfirst['assignedTo']) {
-                this.checkmenu(res.req.body.message, isfirst['menuId'], res.req.body.sender, res.req.body,false,io);
+                this.checkmenu(res.req.body.message, isfirst['menuId'], res.req.body.sender, res.req.body, false, io);
             }
             //other emit message
             else {
@@ -60,7 +60,7 @@ export default class ChatController {
         }
     }
 
-    private async checkmenu(option, menuId, sender, res,redirect,socket) {
+    private async checkmenu(option, menuId, sender, res, redirect, socket) {
         var menu = await Menu.findOne({ menuId: menuId });
 
         if (menu) {
@@ -69,14 +69,14 @@ export default class ChatController {
                 //if option is support or sales
                 if (redirect || selected.toLowerCase() === 'support' || selected.toLowerCase() === 'sales') {
                     //find the leat user value
-                    var usr = await User.find().or([{ userRole: 'support' } || { userRole: 'sales' }])
+                    var usr = await User.find().or([{ userRole: 'support' } || { userRole: 'sales' }]).and([{ status: 'active' }])
                         .sort("assignedChatCount")
                         .limit(1).exec();
                     //update the count
                     if (usr.length > 0) {
                         await User.findOneAndUpdate({ _id: usr[0]._id }, { $set: { assignedChatCount: usr[0]['assignedChatCount'] + 1 } });
                         await chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { assignedTo: usr[0]._id } });
-                       // res.message = 'HI';
+                        // res.message = 'HI';
                         socket.emit('switch', { user_id: usr[0]._id, msg: res });
                     }
 
@@ -131,7 +131,7 @@ export default class ChatController {
                 });
         } else {
             var path = request.return ? 'menuImages' : 'chatImages';
-            await axios({
+            const imgdata = await axios({
                 url: `https://app.interativachat.com.br/api/message/sendImage`,
                 data: `client_id=${cred.client_id}&secret=${cred.secret}&legend=${request.message}&device_id=${cred.device_id}&recipient=${request.recipient}&type=image&file_url=${URL}/${path}/${req.file.filename}`,
                 method: 'post',
@@ -139,21 +139,22 @@ export default class ChatController {
 
             }).then((resp) => {
                 var data = resp.data.messages;
-                var img = new ImageHistoryController();
-                img.create({ message_id: data.message_id, path: path+'/'+req.file.filename });
-
                 if (data.length > 0) {
                     data[0].path = `${URL}/${path}/${req.file.filename}`;
                 }
-                if (request.return) {
-                    return true;
-                }
-                return res.status(200).json(data);
+                return data[0];
+
             })
                 .catch((error) => {
                     console.error(error);
                     return error;
                 });
+            var img = new ImageHistoryController();
+            await img.create({ message_id: imgdata.message_id, path: path + '/' + req.file.filename });
+            if (request.return) {
+                return true;
+            }
+            return res.status(200).json(imgdata);
         }
     }
 
@@ -180,9 +181,9 @@ export default class ChatController {
         }).then((resp: any) => {
             return res.status(200).json(resp.data.messages);
         })
-        .catch((error) => {
-            console.error(error)
-        });
+            .catch((error) => {
+                console.error(error)
+            });
     }
 
 }

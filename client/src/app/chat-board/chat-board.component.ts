@@ -3,6 +3,7 @@ import { ChatService } from '../shared/service/chat.service';
 import { AuthenticationService } from '../shared/service/auth.service';
 import { Router } from '@angular/router';
 import { CrudeService } from '../shared/service/crud.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 class ImageSnippet {
   constructor(public src: string, public file: File) { }
@@ -26,7 +27,7 @@ export class ChatBoardComponent implements OnInit {
   senderList = [];
 
   constructor(private chat: ChatService, private authService: AuthenticationService,
-              private router: Router, private crudeService: CrudeService) {
+    private router: Router, private crudeService: CrudeService, private sanitizer: DomSanitizer) {
     const currentUser = this.authService.currentUserValue;
     if (currentUser === null) {
       this.router.navigate(['/login']);
@@ -54,9 +55,12 @@ export class ChatBoardComponent implements OnInit {
     });
     this.chat.getMessage().subscribe(msg => {
       if (msg) {
-        console.log(msg);
-        if (this.senderList.find((t) => t === msg.sender)) {
+        if (msg.action === 'sender') {
           this.pushMessage(msg);
+        } else {
+          if (this.senderList.find((t) => t === msg.sender)) {
+            this.pushMessage(msg);
+          }
         }
       }
     });
@@ -66,7 +70,7 @@ export class ChatBoardComponent implements OnInit {
     if (msg.action === 'sender' && msg.message_id && msg.success && msg.success === '1') {
       // const chat = this.chatbox.find((t) => t.sender === msg.sdr_rcv).find((t) => t.id === msg.id );
       this.chatbox.forEach(sender => {
-        const chat = sender.listMessage.find((t) => t.message_id === msg.message_id);
+        const chat = sender.listMessage.find((t) => t.id === msg.message_id);
         if (chat) {
           chat.status = 'success';
         }
@@ -115,26 +119,29 @@ export class ChatBoardComponent implements OnInit {
   getMessages(item) {
     if (item) {
       this.crudeService.getBy(`chat/getall`, item.sender).subscribe((json: any) => {
-      this.selectedFile = null;
-      this.page = 0;
-      this.isLoad = true;
-      this.activatedSender = item.sender;
-      this.activatedSenderImg = item.img;
-      if (this.chatbox && this.chatbox.length > 0) {
-        const sender = this.chatbox.find((t) => t.sender === item.sender);
-        if (sender) {
-          this.messageList = [];
-          sender.count = 0;
-          sender.listMessage = json.reverse();
-          this.messageList = sender.listMessage;
-          this.loadImages(this.messageList);
-         
+        this.selectedFile = null;
+        this.page = 0;
+        this.isLoad = true;
+        this.activatedSender = item.sender;
+        this.activatedSenderImg = item.img;
+        if (this.chatbox && this.chatbox.length > 0) {
+          const sender = this.chatbox.find((t) => t.sender === item.sender);
+          if (sender) {
+            this.messageList = [];
+            sender.count = 0;
+            sender.listMessage = json.reverse();
+            this.messageList = sender.listMessage;
+            this.loadImages(this.messageList);
+            setTimeout(() => {
+              const elem = document.getElementById('messages');
+              elem.scrollTop = elem.scrollHeight;
+            }, 100);
+          }
         }
-      }
-    });
+      });
     }
   }
-  loadImages(list){
+  loadImages(list) {
     let imgarray = list.filter((t) => t.type === 'image');
     if (imgarray.length > 0) {
       const arr = imgarray.map((item) => {
@@ -145,7 +152,7 @@ export class ChatBoardComponent implements OnInit {
         if (data) {
           data.forEach(element => {
             const img = list.find((t) => t.id === element.messageId);
-            img.path = element.path;
+            img.path = this.sanitizer.bypassSecurityTrustResourceUrl(element.image);
           });
         }
       });
@@ -171,9 +178,12 @@ export class ChatBoardComponent implements OnInit {
       }
       this.chat.sendMessage(message, this.activatedSender, type, fd).subscribe((data: any) => {
         this.selectedFile = null;
+        if (Object.prototype.toString.call(data).indexOf('Array')) {
+          data = data[0];
+        }
         this.pushMessage({
           sender: this.activatedSender, message, date: new Date().toISOString().replace('T', ' ').split('.')[0],
-          message_id: data[0].message_id, from_me: true, status: 'pending', type, path: data[0].path || ''
+          id: data.message_id, from_me: true, status: 'pending', type, path: this.sanitizer.bypassSecurityTrustResourceUrl(data.path) || ''
         });
         setTimeout(() => {
           const elem = document.getElementById('messages');
@@ -186,9 +196,11 @@ export class ChatBoardComponent implements OnInit {
   formatMessage(sender) {
     this.chatbox = [];
     sender.forEach(element => {
-         this.chatbox.push({ img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
-         sender: element, listMessage: [] });
-        });
+      this.chatbox.push({
+        img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
+        sender: element, listMessage: []
+      });
+    });
     this.getMessages(this.chatbox[0]);
   }
 
@@ -208,8 +220,8 @@ export class ChatBoardComponent implements OnInit {
       if (data && data.length > 0) {
         const sender = this.chatbox.find((t) => t.sender === this.activatedSender);
         if (sender) {
-         //data = data.reverse();
-         data.forEach(d => {
+          //data = data.reverse();
+          data.forEach(d => {
             sender.listMessage.unshift(d);
           });
           this.loadImages(sender.listMessage);

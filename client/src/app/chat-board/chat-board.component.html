@@ -31,7 +31,8 @@
                         <!-- <div class="small last-message">+91 98232 37261: yeah, i'm online</div> -->
                     </div>
                     <div class="flex-grow-1 text-right mt-2">
-                        <div class="small time">{{item.listMessage[0].date | date:'dd/MM/yyyy'}}</div>
+                        <div class="small time">
+                            {{item.listMessage.length>0?(item.listMessage[0].date | date:'dd/MM/yyyy') : ''}}</div>
 
                         <div *ngIf="item.count && item.count>0" class="badge badge-success badge-pill small"
                             id="unread-count">{{item.count}}</div>
@@ -132,7 +133,7 @@
                         <div class="d-flex flex-row">
                             <div class="body m-1 mr-2" *ngIf="item.type==='text'">{{item.message}}</div>
                             <div class="body m-1 mr-2" *ngIf="item.type==='image'">
-                                <img src="{{item.path}}" width="50px">
+                                <img [src]="item.path" width="50px">
                             </div>
                             <div class="time ml-auto small text-right flex-shrink-0 align-self-end text-muted"
                                 style="width:75px;">
