@@ -69,7 +69,7 @@ export default class ChatController {
                 //if option is support or sales
                 if (redirect || selected.toLowerCase() === 'support' || selected.toLowerCase() === 'sales') {
                     //find the leat user value
-                    var usr = await User.find({$or:[{ userRole: 'support' } , { userRole: 'sales' }],$and:[{ status: 'active' }]})
+                    var usr = await User.find({$or:[{ userRole: 'Support' } , { userRole: 'Sales' }],$and:[{ status: 'Active' }]})
                     .sort({ assignedChatCount: 1 }).collation({ locale: "en_US", numericOrdering: true }).limit(1)
                     //update the count
                     if (usr.length > 0) {
