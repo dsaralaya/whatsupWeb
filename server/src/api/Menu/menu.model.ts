@@ -36,6 +36,10 @@ const schema = new mongoose.Schema({
   option5: {
     type: String,
     required: false
+  },
+  endBotReply: {
+    type: String,
+    required: true
   }
 })
 const Menu = mongoose.model("Menu", schema);

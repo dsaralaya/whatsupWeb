@@ -105,6 +105,7 @@ export class BotMenuComponent implements OnInit {
       formData.append('option4', this.botMenuForm.value.option4 === null ? '' : this.botMenuForm.value.option4);
       formData.append('option5', this.botMenuForm.value.option5 === null ? '' : this.botMenuForm.value.option5);
       if (!this.botMenuForm.value._id) {
+        if(this.botMenuForm.value.file !== null) {
         this.crudeService
           .createWithHeader('menu/add', formData)
           .subscribe((res: any) => {
@@ -117,6 +118,20 @@ export class BotMenuComponent implements OnInit {
               this.reset();
             }
           });
+        } else {
+          this.crudeService
+          .create('menu/add', this.botMenuForm.value)
+          .subscribe((res: any) => {
+            if (res.statusCode === '200') {
+              this.notificationSvc.success('Nice', 'Bot Menu added successfully');
+              this.getBotMenus();
+              this.reset();
+            } else {
+              this.notificationSvc.error('Failure', 'Bot Menu addition failed !');
+              this.reset();
+            }
+          });
+        }
       } else {
         if (typeof(this.botMenuForm.value.file) !== 'object') {
           this.crudeService

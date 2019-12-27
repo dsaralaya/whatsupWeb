@@ -71,7 +71,18 @@ export default class MenuController {
       });
     } else {
       req.body['file'] = req.file ? req.file.filename : '';
-      let menu = new Menu(req.body);
+      let menu = new Menu(_.pick(req.body, [
+        "menuId",
+        "menuType",
+        "file",
+        "text",
+        "option1",
+        "option2",
+        "option3",
+        "option4",
+        "option5",
+        "endBotReply"
+      ]));
       //menu['file'] = req.file.filename;
       await menu.save();
       return res.send({
