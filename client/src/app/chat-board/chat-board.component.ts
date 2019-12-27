@@ -62,6 +62,10 @@ export class ChatBoardComponent implements OnInit {
             this.pushMessage(msg);
           }
         }
+        setTimeout(() => {
+          const elem = document.getElementById('messages');
+          elem.scrollTop = elem.scrollHeight;
+        }, 200);
       }
     });
   }
@@ -178,7 +182,7 @@ export class ChatBoardComponent implements OnInit {
       }
       this.chat.sendMessage(message, this.activatedSender, type, fd).subscribe((data: any) => {
         this.selectedFile = null;
-        if (Object.prototype.toString.call(data).indexOf('Array')) {
+        if (Object.prototype.toString.call(data).indexOf('Array')>-1) {
           data = data[0];
         }
         this.pushMessage({
