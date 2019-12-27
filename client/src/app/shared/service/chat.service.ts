@@ -1,23 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { HttpClient, HttpHeaders, } from '@angular/common/http';
+import { configuation } from '../../shared/config';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  serverURL = 'http://localhost:3000';
+  serverURL = configuation.url;
   constructor(private socket: Socket, private http: HttpClient) { }
 
 
   sendMessage(msg: string, sender: string, type, fd: FormData) {
     // return  this.socket.emit('message', { message: msg, sender: sender});
     if (type === 'text') {
-      return this.http.post(`${this.serverURL}/api/chat/send`, { message: msg, sender, type });
+      return this.http.post(`${this.serverURL}api/chat/send`, { message: msg, sender, type });
     }
     fd.append('message', msg);
     fd.append('recipient', sender);
     fd.append('type', 'image');
-    return this.http.post(`${this.serverURL}/api/chat/send`, fd);
+    return this.http.post(`${this.serverURL}api/chat/send`, fd);
   }
 
   getMessage() {
@@ -31,10 +33,10 @@ export class ChatService {
   }
 
   getAllMessage(sender) {
-    return this.http.get(`${this.serverURL}/api/chat/getall?id=${sender}`);
+    return this.http.get(`${this.serverURL}api/chat/getall?id=${sender}`);
   }
 
   loadMoreMessage(sender, page) {
-    return this.http.post(`${this.serverURL}/api/chat/load_more`, { sdr_rcv: sender, page });
+    return this.http.post(`${this.serverURL}api/chat/load_more`, { sdr_rcv: sender, page });
   }
 }

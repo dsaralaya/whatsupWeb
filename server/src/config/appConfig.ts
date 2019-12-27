@@ -1,7 +1,7 @@
 import convict from "convict";
 
 export const appConfig = convict({
-    siteURL: 'http://269806ec.ngrok.io',
+    siteURL: 'https://wa-chatbotapi.herokuapp.com', //'http://269806ec.ngrok.io',
     PrivateKey: '11',
     secretKey: '323',
     port: {

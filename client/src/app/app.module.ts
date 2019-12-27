@@ -10,9 +10,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { DefaultComponent } from './shared/component/default/default.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { ChatBoardComponent } from './chat-board/chat-board.component';
+import { configuation } from './shared/config';
 
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+const config: SocketIoConfig = { url: configuation.url, options: {} };
 @NgModule({
   declarations: [
     AppComponent,
