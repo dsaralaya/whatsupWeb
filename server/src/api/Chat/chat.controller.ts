@@ -21,7 +21,7 @@ export default class ChatController {
                 return res.send({ message: 'duplictae request' });
             }
             console.log('cachet set');
-            myCache.set(res.req.body.message_id, 'res.req.body.message_id', 5000);
+            myCache.set(res.req.body.message_id, 'res.req.body.message_id', 2000);
             var isfirst = await this.savechatHistory(res.req.body.sender);
             //first message
             if (!isfirst) {
@@ -69,9 +69,8 @@ export default class ChatController {
                 //if option is support or sales
                 if (redirect || selected.toLowerCase() === 'support' || selected.toLowerCase() === 'sales') {
                     //find the leat user value
-                    var usr = await User.find().or([{ userRole: 'support' } || { userRole: 'sales' }]).and([{ status: 'active' }])
-                        .sort("assignedChatCount")
-                        .limit(1).exec();
+                    var usr = await User.find({$or:[{ userRole: 'support' } , { userRole: 'sales' }],$and:[{ status: 'active' }]})
+                    .sort({ assignedChatCount: 1 }).collation({ locale: "en_US", numericOrdering: true }).limit(1)
                     //update the count
                     if (usr.length > 0) {
                         await User.findOneAndUpdate({ _id: usr[0]._id }, { $set: { assignedChatCount: usr[0]['assignedChatCount'] + 1 } });
@@ -87,9 +86,12 @@ export default class ChatController {
                         console.log(menu['file'])
                         await chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { menuId: selected } });
                         if (menu['menuType'].toLowerCase() == 'image') {
-
-                            var reqq = { file: { filename: `menuImages/${menu['file']}` }, body: { return: true, type: "image", message: msg, recipient: sender } }
-                            await this.sendMessage(reqq, '');
+                            var file = menu['file'].split(',');
+                             file.forEach(element => {
+                                var reqq = { file: { filename: `menuImages/${element}` }, body: { return: true, type: "image", message: msg, recipient: sender } }
+                                 this.sendMessage(reqq, '');
+                            });
+                           
                         } else {
 
                             var textreqq = { body: { return: true, type: "text", message: msg, sender: sender } }

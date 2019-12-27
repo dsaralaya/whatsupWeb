@@ -7,19 +7,19 @@ import { configuation } from '../../shared/config';
   providedIn: 'root'
 })
 export class ChatService {
-  serverURL = configuation.url;
+  serverURL = configuation.serverURL;
   constructor(private socket: Socket, private http: HttpClient) { }
 
 
   sendMessage(msg: string, sender: string, type, fd: FormData) {
     // return  this.socket.emit('message', { message: msg, sender: sender});
     if (type === 'text') {
-      return this.http.post(`${this.serverURL}api/chat/send`, { message: msg, sender, type });
+      return this.http.post(`${this.serverURL}/chat/send`, { message: msg, sender, type });
     }
     fd.append('message', msg);
     fd.append('recipient', sender);
     fd.append('type', 'image');
-    return this.http.post(`${this.serverURL}api/chat/send`, fd);
+    return this.http.post(`${this.serverURL}/chat/send`, fd);
   }
 
   getMessage() {
@@ -33,10 +33,10 @@ export class ChatService {
   }
 
   getAllMessage(sender) {
-    return this.http.get(`${this.serverURL}api/chat/getall?id=${sender}`);
+    return this.http.get(`${this.serverURL}/chat/getall?id=${sender}`);
   }
 
   loadMoreMessage(sender, page) {
-    return this.http.post(`${this.serverURL}api/chat/load_more`, { sdr_rcv: sender, page });
+    return this.http.post(`${this.serverURL}/chat/load_more`, { sdr_rcv: sender, page });
   }
 }

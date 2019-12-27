@@ -48,6 +48,7 @@ export class ChatBoardComponent implements OnInit {
       console.log('icoming message');
       if (d && this.authService.currentUserValue.id === d.user_id) {
         this.senderList.push(d.msg.senderId);
+        d.msg.id = d.msg.message_id;
         this.pushMessage(d.msg);
         const audio = new Audio('/assets/sound/notification.mp3');
         audio.play();
