@@ -88,17 +88,16 @@
                    </error-message>
                 </div>
              </div>
-             <div class="col-md-4">
+             <!-- <div class="col-md-4">
                 <div class="form-group">
                    <label class="d-block">Status</label>
-                   <!-- <input type="text" class="form-control" name="status" formControlName="status"> -->
                    <ng-select [items]="statusType" bindLabel="name" bindValue="value" name="status" formControlName="status">
                      </ng-select>
                    <input type="hidden" class="form-control" name="assignedChatCount" value="0" formControlName="assignedChatCount">
                    <error-message label="Status" [submitted]="submitted" controlName="status">
                     </error-message>
                 </div>
-             </div>
+             </div> -->
              <div class="col-md-12 mt-2" *ngIf="!active">
                 <div class="button-group">
                    <button class="btn btn-dark mr-3" (click)="edit=!edit;isNew=false;reset()" type="button">Back</button>

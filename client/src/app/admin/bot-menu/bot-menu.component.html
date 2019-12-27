@@ -122,6 +122,15 @@
                                        <input type="text" class="form-control" name="option5" formControlName="option5">
                                     </div>
                                  </div>
+                                 <div class="col-md-4">
+                                    <div class="form-group">
+                                       <label class="d-block">End Bot Reply</label>
+                                       <ng-select [items]="endBotReplyType" bindLabel="name" bindValue="value" name="endBotReply" formControlName="endBotReply">
+                                       </ng-select>
+                                    <error-message label="End Bot Reply" [submitted]="submitted" controlName="endBotReply">
+                                    </error-message>
+                                    </div>
+                                 </div>
 
                  <div class="col-md-12 mt-2" *ngIf="!active">
                     <div class="button-group">

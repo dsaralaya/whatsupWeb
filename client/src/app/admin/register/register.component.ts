@@ -76,10 +76,7 @@ export class RegisterComponent implements OnInit {
         validators: [Validators.required],
         updateOn: 'blur'
       }),
-      status: new FormControl('', {
-        validators: [Validators.required],
-        updateOn: 'blur'
-      }),
+      status: new FormControl('Inactive'),
       assignedChatCount: new FormControl(0)
     });
   }

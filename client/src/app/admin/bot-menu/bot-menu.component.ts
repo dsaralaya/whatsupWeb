@@ -22,6 +22,11 @@ export class BotMenuComponent implements OnInit {
   imageFile: any;
   localUrl = '';
 
+  endBotReplyType = [
+    { name : 'Yes', value: 'yes'},
+    { name : 'No', value: 'no'}
+  ];
+
   columnDefs = [
     {headerName: 'Menu Id', field: 'menuId', filter: 'agTextColumnFilter', filterParams: { clearButton: true }, width: 125  },
     {headerName: 'Menu Type', field: 'menuType', filter: 'agTextColumnFilter', filterParams: { clearButton: true }, width: 140 },
@@ -70,7 +75,8 @@ export class BotMenuComponent implements OnInit {
       option2: new FormControl('', { updateOn: 'blur' }),
       option3: new FormControl('', { updateOn: 'blur' }),
       option4: new FormControl('', { updateOn: 'blur' }),
-      option5: new FormControl('', { updateOn: 'blur' })
+      option5: new FormControl('', { updateOn: 'blur' }),
+      endBotReply: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
     });
   }
 
