@@ -21,6 +21,8 @@ export class BotMenuComponent implements OnInit {
   frameworkComponents: any;
   imageFile: any;
   localUrl = '';
+  imagesList = [];
+  localFileUrl = '';
 
   endBotReplyType = [
     { name : 'Yes', value: 'yes'},
@@ -110,7 +112,7 @@ export class BotMenuComponent implements OnInit {
       formData.append('option4', this.botMenuForm.value.option4 === null ? '' : this.botMenuForm.value.option4);
       formData.append('option5', this.botMenuForm.value.option5 === null ? '' : this.botMenuForm.value.option5);
       if (!this.botMenuForm.value._id) {
-        if(this.botMenuForm.value.file !== null) {
+        if (this.botMenuForm.value.file !== null) {
         this.crudeService
           .createWithHeader('menu/add', formData)
           .subscribe((res: any) => {
@@ -178,7 +180,15 @@ export class BotMenuComponent implements OnInit {
   }
 
   gridEdit(dataItem) {
-    this.localUrl = configuation.url + 'menuImages/' + dataItem.file;
+    this.imagesList = [];
+    if (dataItem.file) {
+      const fileNameList = dataItem.file.split(',');
+      fileNameList.forEach(fname => {
+        this.imagesList.push(fname);
+      });
+      this.localUrl = configuation.url + 'menuImages/';
+    }
+    this.localFileUrl = null;
     this.edit = true;
     this.botMenuForm.patchValue(dataItem);
     this.isNew = false;
@@ -208,13 +218,21 @@ export class BotMenuComponent implements OnInit {
 
   onFileChange(event) {
     if (event.target.files.length > 0) {
-      // const reader = new FileReader();
+       this.imagesList = [];
+       this.localFileUrl = '';
        const fileList = event.target.files;
        this.botMenuForm.controls.file.setValue(fileList);
-      // reader.onload = (event: any) => {
-      //     this.localUrl = event.target.result;
-      // };
-      // reader.readAsDataURL(event.target.files[0]);
+       // tslint:disable-next-line: prefer-for-of
+       for (let i = 0; i < event.target.files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = (event: any) => {
+          this.imagesList.push(event.target.result);
+      };
+        reader.readAsDataURL(event.target.files[i]);
+      }
+      //  event.target.files.forEach(file => {
+      //   reader.readAsDataURL(file.name);
+      // });
     }
   }
 

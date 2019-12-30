@@ -103,20 +103,20 @@ export default class MenuController {
         //   req.files.forEach(file => {
         //     deleteImage.delete(req.files);
         //     //fileList += file.filename + ',';
-          }
+      }
 
-      if(req.files.length>0) {
-        var fileList = '';
+      if(req.files && req.files.length>0) {
+        var fileList = ''; 
         req.files.forEach(file => {
           fileList += file.filename + ',';
         });
       }
       req.body['file'] = req.files ? fileList : '';
     Menu.findByIdAndUpdate(req.params.id, req.body, { new: true })
-      .then(menu => {
+      .then(menu => { 
         if (!menu) {
           return res.send({
-            status: "failure",
+            status: "failure", 
             statusCode: "400",
             message: "Menu not found with ID: " + req.params.id
           });

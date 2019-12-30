@@ -75,12 +75,24 @@
                               <button class="Uploadbtn">Upload Image</button> &nbsp;
                               <input type="file" name="file" (change)="onFileChange($event);" multiple/>
                             </div>
-                            <img [src]="localUrl" *ngIf="localUrl" class="img">
+                            <!-- <img [src]="localUrl" *ngIf="localUrl" class="img"> -->
                        <error-message label="Image" [submitted]="submitted" controlName="file">
                        </error-message>
                     </div>
                  </div>
-     
+               <br/>
+              </div>
+              <div class="row">
+                 <div class="col-md-3" *ngFor="let img of imagesList">
+                     <img *ngIf="(localUrl || localFileUrl) && img !== ''" src="{{localFileUrl===null ? localUrl : ''}}{{img}}" class="img">
+                 </div>
+                 </div>
+                 <!-- <div class="col-md-3" *ngFor="let img of imagesList">
+                  <img *ngIf="localFileUrl && img !== ''" src="{{img}}" class="img">
+              </div> -->
+
+                 <br/>
+              <div class="row">
                  <div class="col-md-12" *ngIf="botMenuForm.controls.menuType.value === 'Text' || botMenuForm.controls.menuType.value === 'ImageText'">
                     <div class="form-group">
                        <label class="d-block required">Text</label>
