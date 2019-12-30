@@ -22,20 +22,26 @@ export default class ChatController {
             }
             console.log('cachet set');
             myCache.set(res.req.body.message_id, 'res.req.body.message_id', 2000);
+
+            if (res.req.body.message === '*') {
+                await this.savechatHistory(res.req.body.sender);
+                this.checkmenu(res.req.body.message, "1", res.req.body.sender, res.req.body, true, io);
+            } else {
             var isfirst = await this.savechatHistory(res.req.body.sender);
             //first message
             if (!isfirst) {
                 // * message show notification
-                if (res.req.body.message === '*') {
-                    this.checkmenu(res.req.body.message, "1", res.req.body.sender, res.req.body, true, io);
-                } else {
+               
                     Menu.findOne({ menuId: "1" }).then((data: any) => {
                         if (data) {
                             var msg = data.text;
                             if (data.menuType.toLowerCase() == 'image') {
 
-                                var reqq = { file: { filename: `menuImages/${data.file}` }, body: { return: true, type: "image", message: msg, recipient: res.req.body.sender } }
-                                this.sendMessage(reqq, '');
+                                var file = data['file'].split(',');
+                                file.forEach(element => {
+                                    var reqq = { file: { filename: `menuImages/${element}` }, body: { return: true, type: "image", message: msg, recipient: res.req.body.sender } }
+                                    this.sendMessage(reqq, '');
+                                });
                             } else {
 
                                 var textreqq = { body: { return: true, type: "text", message: msg, sender: res.req.body.sender } }
@@ -43,7 +49,7 @@ export default class ChatController {
                             }
                         }
                     });
-                }
+                
 
             }
             //checking already assigned
@@ -54,7 +60,8 @@ export default class ChatController {
             else {
                 io.emit('message', res.req.body);
             }
-            return res.status(200);
+          }
+           
         } else {
             io.emit('message', res.req.body);
         }
@@ -63,7 +70,7 @@ export default class ChatController {
     private async checkmenu(option, menuId, sender, res, redirect, socket) {
         var menu = await Menu.findOne({ menuId: menuId });
 
-        if (menu) {
+        if ((menu && menu['endBotReply'] !== 'yes') || redirect) {
             if (menu[`option${option}`] || redirect) {
                 var selected = menu[`option${option}`];
                 //if option is support or sales

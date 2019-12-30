@@ -51,7 +51,10 @@ export class ChatBoardComponent implements OnInit {
         d.msg.id = d.msg.message_id;
         this.pushMessage(d.msg);
         const audio = new Audio('/assets/sound/notification.mp3');
-        audio.play();
+        const playPromise = audio.play();
+        if (playPromise !== null) {
+          playPromise.catch(() => { audio.play(); });
+        }
       }
     });
     this.chat.getMessage().subscribe(msg => {
@@ -63,12 +66,15 @@ export class ChatBoardComponent implements OnInit {
             this.pushMessage(msg);
           }
         }
-        setTimeout(() => {
-          const elem = document.getElementById('messages');
-          elem.scrollTop = elem.scrollHeight;
-        }, 200);
+        this.scroll();
       }
     });
+  }
+  scroll(){
+    setTimeout(() => {
+      const elem = document.getElementById('messages');
+      elem.scrollTop = elem.scrollHeight;
+    }, 200);
   }
 
   pushMessage(msg) {
@@ -108,6 +114,7 @@ export class ChatBoardComponent implements OnInit {
           if (this.chatbox.length === 1) {
             this.getMessages(this.chatbox[0]);
           }
+          this.scroll();
         }
       } else {
         this.chatbox.push({
@@ -190,10 +197,7 @@ export class ChatBoardComponent implements OnInit {
           sender: this.activatedSender, message, date: new Date().toISOString().replace('T', ' ').split('.')[0],
           id: data.message_id, from_me: true, status: 'pending', type, path: this.sanitizer.bypassSecurityTrustResourceUrl(data.path) || ''
         });
-        setTimeout(() => {
-          const elem = document.getElementById('messages');
-          elem.scrollTop = elem.scrollHeight;
-        }, 100);
+        this.scroll();
       });
     }
   }
