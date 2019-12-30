@@ -69,7 +69,7 @@ export class BotMenuComponent implements OnInit {
       _id: new FormControl(''),
       menuId: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
       menuType: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
-      file: new FormControl(null, { updateOn: 'blur' }),
+      file: new FormControl('', { updateOn: 'blur' }),
       text: new FormControl('', { updateOn: 'blur' }),
       option1: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
       option2: new FormControl('', { updateOn: 'blur' }),
@@ -97,7 +97,12 @@ export class BotMenuComponent implements OnInit {
       const formData = new FormData();
       formData.append('menuId', this.botMenuForm.value.menuId);
       formData.append('menuType', this.botMenuForm.value.menuType);
-      formData.append('file', this.botMenuForm.value.file);
+      if (this.botMenuForm.value.file !== null) {
+        for (const singleFile of this.botMenuForm.value.file) {
+          formData.append('file[]', singleFile, singleFile.name);
+        }
+      }
+      // formData.append('files[]', this.botMenuForm.value.file);
       formData.append('text', this.botMenuForm.value.text === null ? '' : this.botMenuForm.value.text);
       formData.append('option1', this.botMenuForm.value.option1);
       formData.append('option2', this.botMenuForm.value.option2 === null ? '' : this.botMenuForm.value.option2);
@@ -203,13 +208,13 @@ export class BotMenuComponent implements OnInit {
 
   onFileChange(event) {
     if (event.target.files.length > 0) {
-      const reader = new FileReader();
-      const file = event.target.files[0];
-      this.botMenuForm.controls.file.setValue(file);
-      reader.onload = (event: any) => {
-          this.localUrl = event.target.result;
-      };
-      reader.readAsDataURL(event.target.files[0]);
+      // const reader = new FileReader();
+       const fileList = event.target.files;
+       this.botMenuForm.controls.file.setValue(fileList);
+      // reader.onload = (event: any) => {
+      //     this.localUrl = event.target.result;
+      // };
+      // reader.readAsDataURL(event.target.files[0]);
     }
   }
 

@@ -96,11 +96,22 @@ export default class MenuController {
   public async update(req: Request, res: Response) {
     await this.getfilebyid(req).then(function(result:any)
     {
-      if (req.file && result.data.file !== "") {
+      if (req.files && result.data.file !== "") {
         var deleteImage = new UploadImagesController();
-        deleteImage.delete(result.data.file);
+        if (req.files.length>0) {
+          req.files.forEach(file => {
+            deleteImage.delete(file.filename);
+            //fileList += file.filename + ',';
+          });
+        }
       }
-      req.body['file'] = req.file ? req.file.filename : '';
+      if(req.files.length>0) {
+        var fileList = '';
+        req.files.forEach(file => {
+          fileList += file.filename + ',';
+        });
+      }
+      req.body['file'] = req.files ? fileList : '';
     Menu.findByIdAndUpdate(req.params.id, req.body, { new: true })
       .then(menu => {
         if (!menu) {
@@ -116,7 +127,7 @@ export default class MenuController {
         return res.send({
           status: "failure",
           statusCode: "400",
-          message: "Error updating Menu with id " + req.body.id
+          message: "Error updating Menu with id " + req.params.id + "error: " + err
         });
       });
     })

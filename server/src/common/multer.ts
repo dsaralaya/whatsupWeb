@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
             var dir = require('path').join(__dirname, '../uploads/chatImages');
         }
         if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
+            fs.mkdirSync(dir , {recursive: true});
         }
         cb(null, dir);
     },
@@ -22,5 +22,5 @@ const storage = multer.diskStorage({
     }
 });
 
-let uploadImage = multer({ storage: storage }).single('file'); 
+let uploadImage = multer({ storage: storage });
 export default uploadImage;

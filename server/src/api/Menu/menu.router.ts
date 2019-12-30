@@ -14,8 +14,8 @@ export class MenuRouter {
     var controller = new MenuController();
     this.router.get("/list", validateAuth, controller.getall);
     this.router.get("/show/:id", validateAuth, controller.getbyid.bind(controller));
-    this.router.post("/add", validateAuth, uploadImage, controller.create);
-    this.router.put("/update/:id", validateAuth,uploadImage, controller.update.bind(controller));
+    this.router.post("/add", validateAuth, uploadImage.array('file[]',5), controller.create);
+    this.router.put("/update/:id", validateAuth,uploadImage.array('file[]',5), controller.update.bind(controller));
     this.router.delete("/remove/:id", validateAuth, controller.delete.bind(controller));
   }
 }

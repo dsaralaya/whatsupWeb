@@ -14,7 +14,7 @@ export class ChatRouter {
         this.router.post("/receive", controller.receive.bind(controller));
         this.router.get("/getall/:id", controller.getAllMessages);
         this.router.post("/load_more", controller.loadMore);
-        this.router.post("/send", uploadImage, controller.sendMessage);
+        this.router.post("/send", uploadImage.array('file',5), controller.sendMessage);
     }
 }
 

@@ -11,7 +11,7 @@ export class UploadImagesRouter {
 
     init() {
         var controller = new UploadImagesController();
-        this.router.post("/upload", uploadImage, controller.upload);
+        this.router.post("/upload", uploadImage.array('file',5), controller.upload);
         this.router.get("/delete", controller.delete);
         //this.router.post("/send", upload,controller.sendMessage);
     }

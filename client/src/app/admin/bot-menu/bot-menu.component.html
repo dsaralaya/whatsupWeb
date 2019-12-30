@@ -73,7 +73,7 @@
                     <div class="form-group">
                         <div class="upload-btn-wrapper">
                               <button class="Uploadbtn">Upload Image</button> &nbsp;
-                              <input type="file" name="file" (change)="onFileChange($event);" />
+                              <input type="file" name="file" (change)="onFileChange($event);" multiple/>
                             </div>
                             <img [src]="localUrl" *ngIf="localUrl" class="img">
                        <error-message label="Image" [submitted]="submitted" controlName="file">
