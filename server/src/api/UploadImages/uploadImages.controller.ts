@@ -19,9 +19,13 @@ export default class UploadImagesController {
                 fs.rmdirSync(path);
               }
         } else {
-            fs.unlink(path,function(err){
-                 if(err) return err;
-           });
+            var fileNames = req.split(',');
+            fileNames.forEach(element => {
+                path = require('path').join(__dirname, '../../uploads/menuImages/'+ element);
+                fs.unlink(path,function(err){
+                    if(err) return err;
+              }); 
+            });
         } 
     }
 }

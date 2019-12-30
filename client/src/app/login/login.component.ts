@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthenticationService, private router: Router, private route: ActivatedRoute, private curdService: CrudeService) {
     const currentUser = this.authService.currentUserValue;
     if (currentUser) {
-      if (currentUser.role === 'admin') {
+      if (currentUser.role === 'Admin') {
         this.router.navigate(['/admin/dashboard']);
           } else {
         this.router.navigate(['/chat']);
@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
           this.curdService.update('register/update', res.data.id, res.data).subscribe((updateRes: any) => {
             console.log(updateRes);
           });
-          if (res.data.role === 'admin') {
+          if (res.data.role === 'Admin') {
             this.router.navigate(['/admin/dashboard']);
           } else {
             this.router.navigate(['/chat']);

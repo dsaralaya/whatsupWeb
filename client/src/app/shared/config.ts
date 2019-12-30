@@ -9,9 +9,9 @@ export const configuation = {
 };
 
 export const constants = {
-    ADMINROLE : 'admin',
-    SALES : 'sales',
-    SUPPORT : 'support'
+    ADMINROLE : 'Admin',
+    SALES : 'Sales',
+    SUPPORT : 'Support'
 };
 
 export const roleAccess = {

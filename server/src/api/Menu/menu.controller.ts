@@ -98,13 +98,13 @@ export default class MenuController {
     {
       if (req.files && result.data.file !== "") {
         var deleteImage = new UploadImagesController();
-        if (req.files.length>0) {
-          req.files.forEach(file => {
-            deleteImage.delete(file.filename);
-            //fileList += file.filename + ',';
-          });
-        }
-      }
+        deleteImage.delete(result.data.file);
+        // if (req.files.length>0) {
+        //   req.files.forEach(file => {
+        //     deleteImage.delete(req.files);
+        //     //fileList += file.filename + ',';
+          }
+
       if(req.files.length>0) {
         var fileList = '';
         req.files.forEach(file => {
