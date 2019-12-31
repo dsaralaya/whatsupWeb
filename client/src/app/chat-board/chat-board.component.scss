@@ -184,10 +184,15 @@ margin-left: 8%;
     font-size: 13px;
 }
 .endchat .dropdown-menu{
-right: -20%!important;
-transform: translate3d(-20px, 40px, -3px)!important;
+	right: -20%!important;
+	transform: translate3d(-20px, 40px, -3px)!important;
 }
 
 .arrow-white {
 	color: #fff !important;
+	cursor:  pointer !important;
+}
+
+.fa-paperclip {
+	padding-top: 6px;
 }

@@ -4,7 +4,7 @@
 
             <!-- Navbar -->
             <div class="row d-flex flex-row align-items-center p-2" id="navbar">
-                    <i *ngIf="currentUser.role" href="#" (click)="logout()" class="fas fa-arrow-left arrow-white">&nbsp;</i>
+                    <i *ngIf="showBackButton" href="#" (click)="back()" class="fas fa-arrow-left arrow-white">&nbsp;</i>
                 <img alt="Profile Photo" class="img-fluid rounded-circle mr-2" style="height:50px; cursor:pointer;"
                     onclick="showProfileSettings()" id="display-pic" src="/assets/images/user-icons/man-0.png">
                 <div class="text-white font-weight-bold" id="username">Me</div>

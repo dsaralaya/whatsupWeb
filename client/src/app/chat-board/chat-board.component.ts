@@ -25,10 +25,14 @@ export class ChatBoardComponent implements OnInit {
   page = 0;
   isLoad = true;
   senderList = [];
+  showBackButton = false;
 
   constructor(private chat: ChatService, private authService: AuthenticationService,
     private router: Router, private crudeService: CrudeService, private sanitizer: DomSanitizer) {
     const currentUser = this.authService.currentUserValue;
+    if (currentUser && currentUser.role === 'Admin') {
+      this.showBackButton = true;
+    }
     if (currentUser === null) {
       this.router.navigate(['/login']);
     }
@@ -258,6 +262,10 @@ export class ChatBoardComponent implements OnInit {
         this.activatedSender = '';
       }
     });
+  }
+
+  back() {
+    this.router.navigate(['/admin/dashboard']);
   }
 
 
