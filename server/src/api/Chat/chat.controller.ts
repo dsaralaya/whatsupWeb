@@ -195,4 +195,21 @@ export default class ChatController {
             });
     }
 
+    public async transfer(req: Request, res: Response){
+        var history = await chatHistory.findOne({ senderId: req.body.sender });
+        await chatHistory.findByIdAndRemove(history._id);
+        var user = await User.findOne({ _id: history['assignedTo'] })
+        await User.findOneAndUpdate({ _id: user._id }, { $set: { assignedChatCount: user['assignedChatCount'] - 1 } });
+        var usr = await User.find({  $and: [{ userRole: req.body.role },{ status: 'Active' }] })
+            .sort({ assignedChatCount: 1 }).collation({ locale: "en_US", numericOrdering: true }).limit(1)
+        //update the count
+        if (usr.length > 0) {
+            await User.findOneAndUpdate({ _id: usr[0]._id }, { $set: { assignedChatCount: usr[0]['assignedChatCount'] + 1 } });
+            await chatHistory.findOneAndUpdate({ senderId: req.body.sender }, { $set: { assignedTo: usr[0]._id } });
+            io.emit('switch', { user_id: usr[0]._id, msg: req.body.msg });
+        }
+        
+        res.send({ status: "success", statusCode: "200" });
+    }
+
 }

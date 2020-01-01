@@ -11,7 +11,7 @@ import { DefaultComponent } from './shared/component/default/default.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { ChatBoardComponent } from './chat-board/chat-board.component';
 import { configuation } from './shared/config';
-
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 const config: SocketIoConfig = { url: configuation.url, options: {} };
 @NgModule({
@@ -26,7 +26,7 @@ const config: SocketIoConfig = { url: configuation.url, options: {} };
     AppRoutingModule,
     SharedModule,
     HttpClientModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config), PickerModule 
   ],
   providers: [{
     provide: LocationStrategy,

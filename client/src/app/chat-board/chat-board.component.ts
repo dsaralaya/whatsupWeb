@@ -26,9 +26,10 @@ export class ChatBoardComponent implements OnInit {
   isLoad = true;
   senderList = [];
   showBackButton = false;
+  showEmojiPicker=false;
 
   constructor(private chat: ChatService, private authService: AuthenticationService,
-    private router: Router, private crudeService: CrudeService, private sanitizer: DomSanitizer) {
+              private router: Router, private crudeService: CrudeService, private sanitizer: DomSanitizer) {
     const currentUser = this.authService.currentUserValue;
     if (currentUser && currentUser.role === 'Admin') {
       this.showBackButton = true;
@@ -74,7 +75,7 @@ export class ChatBoardComponent implements OnInit {
       }
     });
   }
-  scroll(){
+  scroll() {
     setTimeout(() => {
       const elem = document.getElementById('messages');
       elem.scrollTop = elem.scrollHeight;
@@ -158,12 +159,12 @@ export class ChatBoardComponent implements OnInit {
     }
   }
   loadImages(list) {
-    let imgarray = list.filter((t) => t.type === 'image');
+    const imgarray = list.filter((t) => t.type === 'image');
     if (imgarray.length > 0) {
       const arr = imgarray.map((item) => {
         return item.id;
       });
-      var arrStr = encodeURIComponent(JSON.stringify(arr));
+      const arrStr = encodeURIComponent(JSON.stringify(arr));
       this.crudeService.getBy(`imagehistory/get`, arrStr).subscribe((data) => {
         if (data) {
           data.forEach(element => {
@@ -194,7 +195,7 @@ export class ChatBoardComponent implements OnInit {
       }
       this.chat.sendMessage(message, this.activatedSender, type, fd).subscribe((data: any) => {
         this.selectedFile = null;
-        if (Object.prototype.toString.call(data).indexOf('Array')>-1) {
+        if (Object.prototype.toString.call(data).indexOf('Array') > -1) {
           data = data[0];
         }
         this.pushMessage({
@@ -233,7 +234,7 @@ export class ChatBoardComponent implements OnInit {
       if (data && data.length > 0) {
         const sender = this.chatbox.find((t) => t.sender === this.activatedSender);
         if (sender) {
-          //data = data.reverse();
+          // data = data.reverse();
           data.forEach(d => {
             sender.listMessage.unshift(d);
           });
@@ -267,6 +268,36 @@ export class ChatBoardComponent implements OnInit {
   back() {
     this.router.navigate(['/admin/dashboard']);
   }
+
+  transferChat() {
+    const role =this.authService.currentUserValue.role.toLowerCase() === 'support' ? 'Sales' : 'Support';
+    const message = this.messageList[this.messageList.length - 1];
+    message.senderId = this.activatedSender;
+    message.message_id = message.id;
+    this.crudeService.create(`chat/transfer`, { sender: this.activatedSender, role, msg: message}).subscribe((resp: any) => {
+      this.senderList = this.senderList.filter((t) => t !== this.activatedSender);
+      this.chatbox = this.chatbox.filter((t) => t.sender !== this.activatedSender);
+      if (this.chatbox.length > 0) {
+        this.getMessages(this.chatbox[0]);
+      } else {
+        this.messageList = [];
+        this.activatedSender = '';
+      }
+    });
+  }
+
+ 
+
+
+   toggleEmojiPicker() {
+        this.showEmojiPicker = !this.showEmojiPicker;
+      }
+
+  addEmoji(event) {
+        const text = `${event.emoji.native}`;
+        this.inputVal.nativeElement.value += text;
+        this.showEmojiPicker = false;
+      }
 
 
 }
