@@ -22,5 +22,5 @@ io.on('connect', (socket: any) => {
     });
 });
 io.attach(server);
-server.listen(port);
+server.listen(process.env.PORT || port);
 export default io;
