@@ -69,7 +69,7 @@
                            </div>
                         </div>
 
-                 <div class="col-md-4" *ngIf="botMenuForm.controls.menuType.value === 'Image' || botMenuForm.controls.menuType.value === 'ImageText'">
+                 <div class="col-md-4" *ngIf="botMenuForm.controls.menuType.value === 'Image'">
                     <div class="form-group">
                         <div class="upload-btn-wrapper">
                               <button class="Uploadbtn">Upload Image</button> &nbsp;
@@ -93,7 +93,7 @@
 
                  <br/>
               <div class="row">
-                 <div class="col-md-12" *ngIf="botMenuForm.controls.menuType.value === 'Text' || botMenuForm.controls.menuType.value === 'ImageText'">
+                 <div class="col-md-12" *ngIf="botMenuForm.controls.menuType.value === 'Text' || botMenuForm.controls.menuType.value === 'Image'">
                     <div class="form-group">
                        <label class="d-block required">Text</label>
                        <textarea type="text" class="form-control" name="text" formControlName="text"></textarea>

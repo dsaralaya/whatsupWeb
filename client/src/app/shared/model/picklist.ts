@@ -1,14 +1,10 @@
 export const pickList = {
   menuList: [
     {
-      name: 'Image Only',
+      name: 'Image&Text',
       value: 'Image'
     },
-    { name: 'Text Only', value: 'Text' },
-    {
-      name: 'Image + Text',
-      value: 'ImageText'
-    }
+    { name: 'Text Only', value: 'Text' }
   ],
   status: [
     {

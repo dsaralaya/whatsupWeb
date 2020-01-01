@@ -17,6 +17,7 @@ export class ChatHistoryRouter {
     this.router.put("/update/:id", validateAuth, controller.update);
     this.router.delete("/remove/:id", validateAuth, controller.delete);
     this.router.put("/endchat/:id", validateAuth, controller.endchat);
+    this.router.get("/deleteChatHistory", validateAuth, controller.deleteMultipleRecords);
   }
 }
 

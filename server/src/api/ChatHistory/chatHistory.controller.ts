@@ -100,4 +100,23 @@ export default class ChatHistoryController {
         });
       });
   }
+
+  public async deleteMultipleRecords(req: Request) {
+    chatHistory.find(req)
+      .then(chathistory => {
+        if (!chathistory) {
+         
+        } else {
+          chatHistory.deleteMany(req).then(deletedChatHistory => {
+
+          })
+          .catch(err => {
+            
+          })
+        }
+      })
+      .catch(err => {
+        
+      });
+  }
 }

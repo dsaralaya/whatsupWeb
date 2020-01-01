@@ -4,6 +4,7 @@ import axios from 'axios';
 import { appConfig } from '../../config/appConfig';
 import ChatHistoryController from '../ChatHistory/chatHistory.controller';
 import NodeCache from "node-cache";
+var moment = require('moment');
 import chatHistory from '../ChatHistory/chatHistory.model';
 import ImageHistoryController from '../ImageHistory/imageHistory.controller';
 
@@ -90,8 +91,9 @@ export default class ChatController {
                     var menu = await Menu.findOne({ menuId: selected });
                     if (menu) {
                         var msg = menu['text'];
-                        console.log(menu['file'])
-                        await chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { menuId: selected } });
+                        var currentTimeStamp = moment().unix();
+                        console.log(menu['file']);
+                        await chatHistory.findOneAndUpdate({ senderId: sender }, { $set: { menuId: selected, lastUpdated: currentTimeStamp } });
                         if (menu['menuType'].toLowerCase() == 'image') {
                             var file = menu['file'].split(',');
                              file.forEach(element => {
@@ -149,7 +151,7 @@ export default class ChatController {
             }).then((resp) => {
                 var data = resp.data.messages;
                 if (data.length > 0) {
-                    data[0].path = `${URL}/${path}/${req.file.filename}`;
+                    data[0].path = `${URL}/${path}/${req.files[0].filename}`;
                 }
                 return data[0];
 

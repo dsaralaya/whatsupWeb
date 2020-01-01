@@ -72,7 +72,7 @@ export class BotMenuComponent implements OnInit {
       menuId: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
       menuType: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
       file: new FormControl('', { updateOn: 'blur' }),
-      text: new FormControl('', { updateOn: 'blur' }),
+      text: new FormControl('', {  validators: [Validators.required], updateOn: 'blur' }),
       option1: new FormControl('', { validators: [Validators.required], updateOn: 'blur' }),
       option2: new FormControl('', { updateOn: 'blur' }),
       option3: new FormControl('', { updateOn: 'blur' }),

@@ -12,6 +12,10 @@ const schema = new mongoose.Schema({
   menuId: {
     type: String,
     required: false
+  },
+  lastUpdated: {
+    type: Number,
+    required: false
   }
 })
 const chatHistory = mongoose.model("chatHistory", schema);
