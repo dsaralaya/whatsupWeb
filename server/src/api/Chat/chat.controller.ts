@@ -142,7 +142,7 @@ export default class ChatController {
             var path = request.return ? 'menuImages' : 'chatImages';
             const imgdata = await axios({
                 url: `https://app.interativachat.com.br/api/message/sendImage`,
-                data: `client_id=${cred.client_id}&secret=${cred.secret}&legend=${request.message}&device_id=${cred.device_id}&recipient=${request.recipient}&type=image&file_url=${URL}/${path}/${req.file.filename}`,
+                data: `client_id=${cred.client_id}&secret=${cred.secret}&legend=${request.message}&device_id=${cred.device_id}&recipient=${request.recipient}&type=image&file_url=${URL}/${path}/${req.files[0].filename}`,
                 method: 'post',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 
@@ -159,7 +159,7 @@ export default class ChatController {
                     return error;
                 });
             var img = new ImageHistoryController();
-            await img.create({ message_id: imgdata.message_id, path: path + '/' + req.file.filename });
+            await img.create({ message_id: imgdata.message_id, path: path + '/' + req.files[0].filename });
             if (request.return) {
                 return true;
             }

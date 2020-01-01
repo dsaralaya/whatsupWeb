@@ -59,6 +59,7 @@ export class ChatBoardComponent implements OnInit {
         if (playPromise !== null) {
           playPromise.catch(() => { audio.play(); });
         }
+        this.scroll();
       }
     });
     this.chat.getMessage().subscribe(msg => {
