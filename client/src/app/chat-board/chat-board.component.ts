@@ -27,6 +27,7 @@ export class ChatBoardComponent implements OnInit {
   senderList = [];
   showBackButton = false;
   showEmojiPicker=false;
+  entoggle=false;
 
   constructor(private chat: ChatService, private authService: AuthenticationService,
               private router: Router, private crudeService: CrudeService, private sanitizer: DomSanitizer) {
