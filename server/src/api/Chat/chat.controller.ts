@@ -201,7 +201,6 @@ export default class ChatController {
 
     public async transfer(req: Request, res: Response){
         var history = await chatHistory.findOne({ senderId: req.body.sender });
-        await chatHistory.findByIdAndRemove(history._id);
         var user = await User.findOne({ _id: history['assignedTo'] })
         await User.findOneAndUpdate({ _id: user._id }, { $set: { assignedChatCount: user['assignedChatCount'] - 1 } });
         var usr = await User.find({  $and: [{ userRole: req.body.role },{ status: 'Active' }] })

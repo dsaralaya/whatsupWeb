@@ -56,12 +56,13 @@ export class ChatBoardComponent implements OnInit {
         this.senderList.push(d.msg.senderId);
         d.msg.id = d.msg.message_id;
         this.pushMessage(d.msg);
+        this.scroll();
         const audio = new Audio('/assets/sound/notification.mp3');
         const playPromise = audio.play();
         if (playPromise !== null) {
           playPromise.catch(() => { audio.play(); });
         }
-        this.scroll();
+      
       }
     });
     this.chat.getMessage().subscribe(msg => {
@@ -275,6 +276,7 @@ export class ChatBoardComponent implements OnInit {
     const role =this.authService.currentUserValue.role.toLowerCase() === 'support' ? 'Sales' : 'Support';
     const message = this.messageList[this.messageList.length - 1];
     message.senderId = this.activatedSender;
+    message.sender = this.activatedSender;
     message.message_id = message.id;
     this.crudeService.create(`chat/transfer`, { sender: this.activatedSender, role, msg: message}).subscribe((resp: any) => {
       this.senderList = this.senderList.filter((t) => t !== this.activatedSender);
