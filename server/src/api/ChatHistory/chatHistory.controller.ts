@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import chatHistory from "./chatHistory.model";
 import User from "../../common/model/user.model";
 const _ = require("lodash");
+var moment = require('moment');
 
 export default class ChatHistoryController {
   public async getall(req: Request, res: Response) {
@@ -45,7 +46,8 @@ export default class ChatHistoryController {
     if (chathistory) {
       return chathistory;
     } else {
-      let chathistory = new chatHistory({ senderId: sender, menuId: 1 });
+      var currentTimeStamp = moment().unix();
+      let chathistory = new chatHistory({ senderId: sender, menuId: 1, lastUpdated: currentTimeStamp });
       await chathistory.save();
       return null;
     }

@@ -26,7 +26,7 @@ io.attach(server);
 server.listen(process.env.PORT || port);
 
 // Cron Tasks
-cron.schedule('* * * * *', () => {
+cron.schedule('*/5 * * * *', () => {
     var older_than = moment().subtract(45, 'minutes').unix();
     var chatHistory = new ChatHistoryController();
     chatHistory.deleteMultipleRecords({ lastUpdated: { $lte: older_than } });

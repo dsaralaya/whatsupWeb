@@ -1,0 +1,79 @@
+<!-- <div class="container">
+<ag-grid-angular
+    style="width: 500px; height: 500px;"
+    class="ag-theme-material"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    >
+</ag-grid-angular>
+</div> -->
+
+<div class="animated fadeIn">
+
+        <div class="card">
+           <div class="card-header pt-3 pb-0">
+              <h5 class="h4">
+                 Settings
+              </h5>
+           </div>
+           <div class="card-body">
+                <div class="row" *ngIf="!edit">
+                        <div class="col-sm-12" >
+                           <button type="button" class="btn btn-primary pull-right form-group" (click)="edit=!edit">
+                          Edit Settings</button>
+                        </div>
+                       <br/>
+                     </div>
+              <ng-container *ngTemplateOutlet="settingstemplate;context:{ form:form,submitted:submitted}">
+              </ng-container>
+     
+           </div>
+        </div>
+     
+     </div>
+     
+     <ng-template #settingstemplate>
+        <div>
+           <form [formGroup]="settingsForm">
+              <div class="row">
+                 <div class="col-sm-12">
+                    <!-- <h5 class="mb-3">{{isNew?'Add':'Edit'}} User</h5> -->
+                 </div>
+                 <div class="col-md-4">
+                    <div class="form-group">
+                       <label class="d-block required">Client ID</label>
+                       <input type="text" [readOnly]="!edit" class="form-control" name="client_id" formControlName="client_id">
+                       <error-message label="Client ID" [submitted]="submitted" controlName="client_id">
+                       </error-message>
+                    </div>
+                 </div>
+     
+                 <div class="col-md-4">
+                    <div class="form-group">
+                       <label class="d-block required">Secret Key</label>
+                       <input type="input" [readOnly]="!edit" class="form-control" name="secret" formControlName="secret">
+                       <error-message label="Secret Key" [submitted]="submitted" controlName="secret">
+                       </error-message>
+                    </div>
+                 </div>
+     
+                 <div class="col-md-4">
+                    <div class="form-group">
+                       <label class="d-block required">Device Id</label>
+                       <input type="input" [readOnly]="!edit" class="form-control" name="device_id" formControlName="device_id" />
+                       <error-message label="Device Id" [submitted]="submitted" controlName="device_id">
+                       </error-message>
+     
+                    </div>
+                 </div>
+     
+                 <div class="col-md-12 mt-2" *ngIf="edit">
+                    <div class="button-group">
+                            <button class="btn btn-dark mr-3" (click)="edit=!edit" type="button">Cancel</button>
+                       <button type="button" (click)="onSubmit()" class="btn btn-success">Submit</button>
+                    </div>
+                 </div>
+              </div>
+           </form>
+        </div>
+     </ng-template>

@@ -7,6 +7,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { SharedModule } from '../shared/shared.module';
 import { BotMenuComponent } from './bot-menu/bot-menu.component';
 import { ButtonRendererComponent } from '../shared/component/button-renderer.component';
+import { SettingsComponent } from './settings/settings.component';
 
 
 
@@ -14,7 +15,8 @@ import { ButtonRendererComponent } from '../shared/component/button-renderer.com
   declarations: [
     RegisterComponent,
     DashboardComponent,
-    BotMenuComponent
+    BotMenuComponent,
+    SettingsComponent
   ],
   imports: [
     CommonModule, AdminRoutingModule, AgGridModule.withComponents([ButtonRendererComponent]), SharedModule
