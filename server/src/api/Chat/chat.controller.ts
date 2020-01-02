@@ -40,7 +40,7 @@ export default class ChatController {
 
                                 var file = data['file'].split(',');
                                 file.forEach(element => {
-                                    var reqq = { file: { filename: `menuImages/${element}` }, body: { return: true, type: "image", message: msg, recipient: res.req.body.sender } }
+                                    var reqq = { file: { filename: `${element}` }, body: { return: true, type: "image", message: msg, recipient: res.req.body.sender } }
                                     this.sendMessage(reqq, '');
                                 });
                             } else {
@@ -128,7 +128,7 @@ export default class ChatController {
         var cred = appConfig.get('intractiveAPI');
         if (request.type == 'text') {
             await axios({
-                url: `https://app.interativachat.com.br/api/message/sendText?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&message=${request.message}&recipient=${request.sender}&type=text`,
+                url: encodeURI(`https://app.interativachat.com.br/api/message/sendText?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&message=${request.message}&recipient=${request.sender}&type=text`),
                 method: 'get'
             }).then((resp) => {
                 if (request.return) {
@@ -142,30 +142,32 @@ export default class ChatController {
                 });
         } else {
             var path = request.return ? 'menuImages' : 'chatImages';
-            const imgdata = await axios({
-                url: `https://app.interativachat.com.br/api/message/sendImage`,
-                data: `client_id=${cred.client_id}&secret=${cred.secret}&legend=${request.message}&device_id=${cred.device_id}&recipient=${request.recipient}&type=image&file_url=${URL}/${path}/${req.files[0].filename}`,
-                method: 'post',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            if (req.file.filename !== "") {
+                const imgdata = await axios({
+                    url: `https://app.interativachat.com.br/api/message/sendImage`,
+                    data: `client_id=${cred.client_id}&secret=${cred.secret}&legend=${request.message}&device_id=${cred.device_id}&recipient=${request.recipient}&type=image&file_url=${URL}/${path}/${req.file.filename}`,
+                    method: 'post',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 
-            }).then((resp) => {
-                var data = resp.data.messages;
-                if (data.length > 0) {
-                    data[0].path = `${URL}/${path}/${req.files[0].filename}`;
+                }).then((resp) => {
+                    var data = resp.data.messages;
+                    if (data.length > 0) {
+                        data[0].path = `${URL}/${path}/${req.file.filename}`;
+                    }
+                    return data[0];
+
+                })
+                    .catch((error) => {
+                        console.error(error);
+                        return error;
+                    });
+                var img = new ImageHistoryController();
+                await img.create({ message_id: imgdata.message_id, path: path + '/' + req.file.filename });
+                if (request.return) {
+                    return true;
                 }
-                return data[0];
-
-            })
-                .catch((error) => {
-                    console.error(error);
-                    return error;
-                });
-            var img = new ImageHistoryController();
-            await img.create({ message_id: imgdata.message_id, path: path + '/' + req.files[0].filename });
-            if (request.return) {
-                return true;
+                return res.status(200).json(imgdata);
             }
-            return res.status(200).json(imgdata);
         }
     }
 
