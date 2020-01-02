@@ -1,6 +1,6 @@
 import { Router } from "express";
 import ChatController from "./chat.controller";
-import uploadImage from '../../common/multer';
+import uploadSingleImage from '../../common/singleMulter';
 
 export class ChatRouter {
     public router: Router;
@@ -14,7 +14,7 @@ export class ChatRouter {
         this.router.post("/receive", controller.receive.bind(controller));
         this.router.get("/getall/:id", controller.getAllMessages);
         this.router.post("/load_more", controller.loadMore);
-        this.router.post("/send", uploadImage.array('file',5), controller.sendMessage);
+        this.router.post("/send", uploadSingleImage, controller.sendMessage);
         this.router.post("/transfer", controller.transfer);
     }
 }
