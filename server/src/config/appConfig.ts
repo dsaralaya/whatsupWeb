@@ -20,10 +20,10 @@ export const appConfig = convict({
     db: {
         url: 'mongodb://51.79.74.14/whatsapp'
     },
-    intractiveAPI: {
-        client_id: 'cid5de59c223b075',
-        secret: 'sec5de59c223b07a4.218354795de59c223b0965.28363623',
-        device_id: '5dfcd5f3d2116'
-    }
-
+    // intractiveAPI: {
+    //     client_id: 'cid5de59c223b075',
+    //     secret: 'sec5de59c223b07a4.218354795de59c223b0965.28363623',
+    //     device_id: '5dfcd5f3d2116'
+    // }
+    intractiveAPI: require('../cred.json')
 });

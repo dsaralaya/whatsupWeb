@@ -165,7 +165,7 @@
                 <div *ngIf="!selectedFile" class="justify-self-end align-items-center flex-row d-flex">
                     <a href="javascript:void(0)" (click)="toggleEmojiPicker()"><i class="far fa-smile text-muted px-3"
                             style="font-size:1.5rem;"></i></a>
-                        <emoji-mart [style]="{ position: 'absolute', bottom: '20px', left: '2%' }" class="emoji-mart" set="emojione" (emojiSelect)="addEmoji($event)" *ngIf="showEmojiPicker" title="Pick your emoji…">
+                        <emoji-mart [style]="{ position: 'absolute', bottom: '71px', left: '1%', width: '311px' }" class="emoji-mart" set="emojione" (emojiSelect)="addEmoji($event)" *ngIf="showEmojiPicker" [showPreview]="false" title="Pick your emoji…">
                         </emoji-mart>
                     <input #inputVal (keyup.enter)="sendMessage(inputVal.value)" type="text" name="message" id="input"
                         placeholder="Type a message" class="flex-grow-1 border-0 px-3 py-2 my-3 rounded shadow-sm">

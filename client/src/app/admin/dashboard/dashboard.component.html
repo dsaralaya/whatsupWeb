@@ -1,1 +1,18 @@
-<p>dashboard works!</p>
+<div class="animated fadeIn">
+
+        <div class="card">
+           <div class="card-header pt-3 pb-0">
+              <h5 class="h4">
+                 Dashboard
+              </h5>
+           </div>
+           <div class="card-body">
+              <br/>
+             <h4>Device Status : </h4>
+             <span *ngIf="connected" class="label label-success">Connected</span>
+             <span *ngIf="!connected" class="label label-danger">Disconnected</span>
+           </div>
+        </div>
+     
+     </div>
+     

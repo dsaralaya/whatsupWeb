@@ -219,7 +219,7 @@ export class BotMenuComponent implements OnInit {
   onFileChange(event) {
     if (event.target.files.length > 0) {
        this.imagesList = [];
-       this.localFileUrl = '';
+       this.localFileUrl = 'images';
        const fileList = event.target.files;
        this.botMenuForm.controls.file.setValue(fileList);
        // tslint:disable-next-line: prefer-for-of
@@ -240,6 +240,11 @@ export class BotMenuComponent implements OnInit {
     this.submitted = false;
     this.botMenuForm.reset();
     this.edit = false;
+  }
+
+  resetImageList() {
+    this.imagesList = [];
+    this.localFileUrl = '';
   }
 
 }

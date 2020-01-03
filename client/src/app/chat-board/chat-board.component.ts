@@ -252,7 +252,11 @@ export class ChatBoardComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
+    this.authService.currentUserValue['status'] = 'Inactive';
+    // tslint:disable-next-line: max-line-length
+    this.crudeService.update('register/update', this.authService.currentUserValue.id, this.authService.currentUserValue).subscribe((updateRes: any) => {
+      this.authService.logout();
+    });
   }
 
   endChat() {

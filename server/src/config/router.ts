@@ -8,6 +8,7 @@ import ImageHistoryRouter from "../api/ImageHistory/imageHistory.router";
 import  ChatRouter  from "../api/Chat/chat.router";
 import UploadImagesRouter from "../api/UploadImages/uploadImages.router";
 import SettingsRouter  from "../api/Settings/settings.router";
+import DeviceRouter from "../api/Device/device.router";
 
 export default class Routes {
   public router: Router;
@@ -34,6 +35,7 @@ export default class Routes {
     this.app.use("/api/chat", ChatRouter);
     this.app.use("/api/images", UploadImagesRouter);
     this.app.use("/api/settings", SettingsRouter);
+    this.app.use("/api/device", DeviceRouter);
     
   }
 

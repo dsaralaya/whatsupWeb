@@ -13,7 +13,7 @@ export class DefaultComponent implements OnInit {
   }
 
   selected(id) {
-    if (id !== 2) {
+    // if (id !== 2) {
       const elements = document.getElementsByClassName('nav-link');
       // tslint:disable-next-line: prefer-for-of
       for (let i = 1 ; i <= elements.length; i++) {
@@ -23,7 +23,7 @@ export class DefaultComponent implements OnInit {
           document.getElementsByClassName('nav-link')[i].classList.add('active');
         }
       }
-    }
+    //}
   }
 
 }
