@@ -4,6 +4,7 @@ import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { BotMenuComponent } from './bot-menu/bot-menu.component';
 import { SettingsComponent } from './settings/settings.component';
+import { ContactComponent } from './contacts/contacts.component';
 
 
 const routes: Routes = [{
@@ -21,6 +22,9 @@ const routes: Routes = [{
 },{
     path: 'settings',
     component: SettingsComponent
+}, {
+    path: 'contacts',
+    component: ContactComponent
 
 }];
 

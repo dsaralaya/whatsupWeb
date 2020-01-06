@@ -8,6 +8,8 @@
                 <img alt="Profile Photo" class="img-fluid rounded-circle mr-2" style="height:50px; cursor:pointer;"
                     onclick="showProfileSettings()" id="display-pic" src="/assets/images/user-icons/man-0.png">
                 <div class="text-white font-weight-bold" id="username">Me</div>
+                &nbsp;&nbsp;&nbsp;
+                <a class="add-contact" href="javascript:void(0)" (click)="showContacts = !showContacts"><i class="fas fa-plus text-white"></i></a>
                 <div class="nav-item dropdown ml-auto">
                     <a class="nav-link dropdown-toggle" (click)="toggle=!toggle" data-toggle="dropdown"
                         href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false"><i
@@ -18,8 +20,14 @@
                         <a class="dropdown-item" href="#" (click)="logout()">Log Out</a>
                     </div>
                 </div>
+                
             </div>
-
+            <div *ngIf="showContacts">
+                    <br/>
+            <ng-select [items]="contacts" [typeahead]="newContact" [addTag]="true" [searchable]="true" [searchFn]="customSearchFn" [closeOnSelect]="true" (change)="addContact($event)" bindLabel="name" bindValue="number" name="contact" placeholder="Type to search contact">
+                </ng-select>
+                <br/>
+            </div>
             <!-- Chat List -->
             <div class="row" id="chat-list" style="overflow:auto;">
                 <div *ngFor="let item of chatbox"

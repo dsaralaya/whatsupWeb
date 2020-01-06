@@ -8,6 +8,7 @@ import { SharedModule } from '../shared/shared.module';
 import { BotMenuComponent } from './bot-menu/bot-menu.component';
 import { ButtonRendererComponent } from '../shared/component/button-renderer.component';
 import { SettingsComponent } from './settings/settings.component';
+import { ContactComponent } from './contacts/contacts.component';
 
 
 
@@ -16,7 +17,8 @@ import { SettingsComponent } from './settings/settings.component';
     RegisterComponent,
     DashboardComponent,
     BotMenuComponent,
-    SettingsComponent
+    SettingsComponent,
+    ContactComponent
   ],
   imports: [
     CommonModule, AdminRoutingModule, AgGridModule.withComponents([ButtonRendererComponent]), SharedModule

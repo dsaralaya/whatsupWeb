@@ -5,7 +5,8 @@ import LoginRouter  from "../api/Login/login.router";
 import MenuRouter from "../api/Menu/menu.router";
 import ChatHistoryRouter from "../api/ChatHistory/chatHistory.router";
 import ImageHistoryRouter from "../api/ImageHistory/imageHistory.router";
-import  ChatRouter  from "../api/Chat/chat.router";
+import ChatRouter  from "../api/Chat/chat.router";
+import ContactRouter  from "../api/contacts/contacts.router";
 import UploadImagesRouter from "../api/UploadImages/uploadImages.router";
 import SettingsRouter  from "../api/Settings/settings.router";
 import DeviceRouter from "../api/Device/device.router";
@@ -33,6 +34,7 @@ export default class Routes {
     this.app.use("/api/chathistory", ChatHistoryRouter);
     this.app.use("/api/imagehistory", ImageHistoryRouter);
     this.app.use("/api/chat", ChatRouter);
+    this.app.use("/api/contact", ContactRouter);
     this.app.use("/api/images", UploadImagesRouter);
     this.app.use("/api/settings", SettingsRouter);
     this.app.use("/api/device", DeviceRouter);

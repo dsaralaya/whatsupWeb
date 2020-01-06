@@ -4,6 +4,7 @@ import { AuthenticationService } from '../shared/service/auth.service';
 import { Router } from '@angular/router';
 import { CrudeService } from '../shared/service/crud.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
 
 class ImageSnippet {
   constructor(public src: string, public file: File) { }
@@ -28,6 +29,9 @@ export class ChatBoardComponent implements OnInit {
   showBackButton = false;
   showEmojiPicker=false;
   entoggle=false;
+  showContacts = false;
+  contacts = [];
+  newContact = new Subject<string>();
 
   constructor(private chat: ChatService, private authService: AuthenticationService,
               private router: Router, private crudeService: CrudeService, private sanitizer: DomSanitizer) {
@@ -77,6 +81,7 @@ export class ChatBoardComponent implements OnInit {
         this.scroll();
       }
     });
+    this.getContacts();
   }
   scroll() {
     setTimeout(() => {
@@ -306,6 +311,34 @@ export class ChatBoardComponent implements OnInit {
         this.inputVal.nativeElement.value += text;
         this.showEmojiPicker = false;
       }
+
+    getContacts() {
+      const params = 'contact/list'; // `page=${currentPage}`;
+      this.crudeService.get(params).subscribe(res => {
+      if (res.statusCode === '200') {
+        this.contacts = res.data;
+      } else {
+        this.contacts = [];
+      }
+    });
+    }
+
+    customSearchFn(term: string, item: any) {
+      term = term.toLocaleLowerCase();
+      return item.name.toLocaleLowerCase().indexOf(term) > -1 || 
+             item.number.indexOf(term) > -1;
+    }
+
+    addContact(event) {
+      this.chatbox.push({
+        sender: event.number, img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
+        count: 0, listMessage: []
+      });
+      if (this.chatbox.length === 1) {
+        this.getMessages(this.chatbox[0]);
+      }
+      this.scroll();
+    }
 
 
 }

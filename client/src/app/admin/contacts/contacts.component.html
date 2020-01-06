@@ -1,0 +1,85 @@
+<!-- <div class="container">
+<ag-grid-angular
+    style="width: 500px; height: 500px;"
+    class="ag-theme-material"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    >
+</ag-grid-angular>
+</div> -->
+
+<div class="animated fadeIn">
+
+        <div class="card">
+           <div class="card-header pt-3 pb-0">
+              <h5 class="h4">
+                 Contacts
+              </h5>
+           </div>
+           <div class="card-body">
+              <div class="{{edit?'d-none':''}}">
+                 <div class="row">
+                    <div class="col-sm-12" >
+                       <button type="button" class="btn btn-primary pull-right form-group" (click)="edit=!edit;isNew=true">
+                       <!-- <i class="la la-plus font-1x3"></i> --> Add Contact</button>
+                    </div>
+                   <br/>
+                 </div>
+     
+                 <ag-grid-angular
+                 style="height: 390px"
+                 class="ag-theme-material"
+                 [rowData]="rowData"
+                 [columnDefs]="columnDefs"
+                 [frameworkComponents]="frameworkComponents"
+                 >
+             </ag-grid-angular>
+              </div>
+              <ng-container *ngTemplateOutlet="contacttemplate;context:{ form:form,submitted:submitted}">
+              </ng-container>
+     
+           </div>
+        </div>
+     
+     </div>
+     
+     <ng-template #contacttemplate>
+        <div *ngIf="edit">
+           <form [formGroup]="contactForm">
+              <div class="row">
+                 <div class="col-sm-12">
+                    <h5 class="mb-3">{{isNew?'Add':'Edit'}} Contact</h5>
+                 </div>
+                 <div class="col-md-4">
+                        <div class="form-group">
+                           <label class="d-block required">Name</label>
+                           <input type="input" class="form-control" name="name" formControlName="name">
+                           <error-message label="Contact Name" [submitted]="submitted" controlName="name">
+                           </error-message>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4">
+                            <div class="form-group">
+                               <label class="d-block required">Number</label>
+                               <input type="input" class="form-control" name="number" formControlName="number">
+                               <error-message label="Contact Number" [submitted]="submitted" controlName="number">
+                               </error-message>
+                            </div>
+                         </div>
+
+              </div>
+
+                 <br/>
+              <div class="row">
+
+                 <div class="col-md-12 mt-2" *ngIf="!active">
+                    <div class="button-group">
+                       <button class="btn btn-dark mr-3" (click)="edit=!edit;isNew=false;contactForm.reset();submitted=false" type="button">Back</button>
+                       <button type="button" (click)="onSubmit()" class="btn btn-success">Submit</button>
+                    </div>
+                 </div>
+              </div>
+           </form>
+        </div>
+     </ng-template>
