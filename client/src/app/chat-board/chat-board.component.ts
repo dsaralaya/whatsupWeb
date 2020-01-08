@@ -32,6 +32,7 @@ export class ChatBoardComponent implements OnInit {
   showContacts = false;
   contacts = [];
   newContact = new Subject<string>();
+  isAddContact = false;
 
   constructor(private chat: ChatService, private authService: AuthenticationService,
               private router: Router, private crudeService: CrudeService, private sanitizer: DomSanitizer) {
@@ -143,6 +144,7 @@ export class ChatBoardComponent implements OnInit {
 
   getMessages(item) {
     if (item) {
+      this.isAddContact = false;
       this.crudeService.getBy(`chat/getall`, item.sender).subscribe((json: any) => {
         this.selectedFile = null;
         this.page = 0;
@@ -287,7 +289,7 @@ export class ChatBoardComponent implements OnInit {
     message.senderId = this.activatedSender;
     message.sender = this.activatedSender;
     message.message_id = message.id;
-    this.crudeService.create(`chat/transfer`, { sender: this.activatedSender, role, msg: message}).subscribe((resp: any) => {
+    this.crudeService.create(`chat/transfer`, { sender: this.activatedSender, role: role, msg: message}).subscribe((resp: any) => {
       this.senderList = this.senderList.filter((t) => t !== this.activatedSender);
       this.chatbox = this.chatbox.filter((t) => t.sender !== this.activatedSender);
       if (this.chatbox.length > 0) {
@@ -325,18 +327,31 @@ export class ChatBoardComponent implements OnInit {
 
     customSearchFn(term: string, item: any) {
       term = term.toLocaleLowerCase();
-      return item.name.toLocaleLowerCase().indexOf(term) > -1 || 
-             item.number.indexOf(term) > -1;
+      return item.name === undefined ? -1 : item.name.toLocaleLowerCase().indexOf(term) > -1 || 
+      item.number === undefined ? -1 : item.number.indexOf(term) > -1;
     }
 
     addContact(event) {
-      this.chatbox.push({
-        sender: event.number, img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
-        count: 0, listMessage: []
-      });
-      if (this.chatbox.length === 1) {
-        this.getMessages(this.chatbox[0]);
+      if (event && event.number) {
+        this.chatbox.unshift({
+          sender: event.number, img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
+          count: 0, listMessage: []
+        });
+      } else if (event && event.name) {
+        this.chatbox.unshift({
+          sender: event.name, img: `/assets/images/user-icons/man-${Math.floor((Math.random() * 6))}.png`,
+          count: 0, listMessage: []
+        });
       }
+      if(event) {
+        this.crudeService.create('chathistory/start', { sender: event.number === undefined ? event.name:event.number, assignedTo: this.authService.currentUserValue.id}).subscribe(res => {
+          console.log(res);
+        });
+        this.getMessages(this.chatbox[0]);
+        this.isAddContact = true;
+        this.scroll();
+      }
+      this.isAddContact = true;
       this.scroll();
     }
 

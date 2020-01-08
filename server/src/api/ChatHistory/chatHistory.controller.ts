@@ -52,6 +52,21 @@ export default class ChatHistoryController {
       return null;
     }
   }
+
+  public async start(req) {
+    let chathistory = await chatHistory.findOne({ senderId: req.body.sender });
+    if (chathistory) {
+      return chathistory;
+    } else {
+      var currentTimeStamp = moment().unix();
+      var user = await User.findOne({ _id: req.body.assignedTo })
+      await User.findOneAndUpdate({ _id: user._id }, { $set: { assignedChatCount: user['assignedChatCount'] + 1 } });
+      let chathistory = new chatHistory({ senderId: req.body.sender, assignedTo: req.body.assignedTo, lastUpdated: currentTimeStamp });
+      await chathistory.save();
+      return { status: "success", statusCode: "200" };
+    }
+  }
+
   public async endchat(req: Request, res: Response) {
     var history = await chatHistory.findOne({ senderId: req.params.id });
     await chatHistory.findByIdAndRemove(history._id);
