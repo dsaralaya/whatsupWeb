@@ -30,6 +30,6 @@ cron.schedule('*/5 * * * *', () => {
     var older_than = moment().subtract(45, 'minutes').unix();
     var chatHistory = new ChatHistoryController();
     chatHistory.deleteMultipleRecords({ lastUpdated: { $lte: older_than } });
-    console.log('running a task every minute');
+    //console.log('running a task every minute');
 });
 export default io;

@@ -111,8 +111,9 @@ export class BotMenuComponent implements OnInit {
       formData.append('option3', this.botMenuForm.value.option3 === null ? '' : this.botMenuForm.value.option3);
       formData.append('option4', this.botMenuForm.value.option4 === null ? '' : this.botMenuForm.value.option4);
       formData.append('option5', this.botMenuForm.value.option5 === null ? '' : this.botMenuForm.value.option5);
+      formData.append('endBotReply', this.botMenuForm.value.endBotReply === null ? '' : this.botMenuForm.value.endBotReply);
       if (!this.botMenuForm.value._id) {
-        if (this.botMenuForm.value.file !== null) {
+        if (this.botMenuForm.value.file !== null && this.botMenuForm.value.file !== '') {
         this.crudeService
           .createWithHeader('menu/add', formData)
           .subscribe((res: any) => {

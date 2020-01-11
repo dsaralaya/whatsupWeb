@@ -39,6 +39,10 @@ export class SettingsComponent implements OnInit {
       device_id: new FormControl('', {
         validators: [Validators.required],
         updateOn: 'blur'
+      }),
+      whatsapp_api_url: new FormControl('', {
+        validators: [Validators.required],
+        updateOn: 'blur'
       })
     });
   }

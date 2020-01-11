@@ -66,6 +66,16 @@
      
                     </div>
                  </div>
+
+                 <div class="col-md-4">
+                     <div class="form-group">
+                        <label class="d-block required">Whatsapp API Url</label>
+                        <input type="input" [readOnly]="!edit" class="form-control" name="whatsapp_api_url" formControlName="whatsapp_api_url" />
+                        <error-message label="Whatsapp API Url" [submitted]="submitted" controlName="whatsapp_api_url">
+                        </error-message>
+      
+                     </div>
+                  </div>
      
                  <div class="col-md-12 mt-2" *ngIf="edit">
                     <div class="button-group">

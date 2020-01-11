@@ -111,7 +111,13 @@ export default class ChatController {
                     }
 
                 }
+            } else if (menu['endBotReply'] !== 'yes') {
+                var invalidOption = { body: { return: true, type: "text", message: 'The option you entered is invalid. Please enter a valid option from above.', sender: sender } }
+                await this.sendMessage(invalidOption, '');
             }
+        } else if (!menu) {
+            var invalidOption = { body: { return: true, type: "text", message: 'The option you entered is invalid. Please enter a valid option from above.', sender: sender } }
+            await this.sendMessage(invalidOption, '');
         }
 
 
@@ -128,7 +134,7 @@ export default class ChatController {
         var cred = appConfig.get('intractiveAPI');
         if (request.type == 'text') {
             await axios({
-                url: encodeURI(`https://app.interativachat.com.br/api/message/sendText?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&message=${request.message}&recipient=${request.sender}&type=text`),
+                url: encodeURI(`${cred['whatsapp_api_url']}/message/sendText?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&message=${request.message}&recipient=${request.sender}&type=text`),
                 method: 'get'
             }).then((resp) => {
                 if (request.return) {
@@ -144,7 +150,7 @@ export default class ChatController {
             var path = request.return ? 'menuImages' : 'chatImages';
             if (req.file.filename !== "") {
                 const imgdata = await axios({
-                    url: `https://app.interativachat.com.br/api/message/sendImage`,
+                    url: `${cred['whatsapp_api_url']}/message/sendImage`,
                     data: `client_id=${cred.client_id}&secret=${cred.secret}&legend=${request.message}&device_id=${cred.device_id}&recipient=${request.recipient}&type=image&file_url=${URL}/${path}/${req.file.filename}`,
                     method: 'post',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -175,7 +181,7 @@ export default class ChatController {
         var cred = appConfig.get('intractiveAPI');
         var date = new Date().toISOString().split('T')[0];
         const response = await axios({
-            url: `https://app.interativachat.com.br/api/messages?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&limit=10&sdr_rcv=${req.params.id}&page=0`,
+            url: `${cred['whatsapp_api_url']}/messages?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&limit=10&sdr_rcv=${req.params.id}&page=0`,
             method: 'get'
         }).then((resp: any) => {
             return res.status(200).json(resp.data.messages);
@@ -189,7 +195,7 @@ export default class ChatController {
         var cred = appConfig.get('intractiveAPI');
         var date = new Date().toISOString().split('T')[0];
         const response = await axios({
-            url: `https://app.interativachat.com.br/api/messages?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&sdr_rcv=${req.body.sdr_rcv}&page=${req.body.page}&limit=10`,
+            url: `${cred['whatsapp_api_url']}/messages?client_id=${cred.client_id}&secret=${cred.secret}&device_id=${cred.device_id}&sdr_rcv=${req.body.sdr_rcv}&page=${req.body.page}&limit=10`,
             method: 'get'
         }).then((resp: any) => {
             return res.status(200).json(resp.data.messages);

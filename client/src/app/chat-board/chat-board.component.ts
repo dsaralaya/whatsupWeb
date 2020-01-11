@@ -56,14 +56,18 @@ export class ChatBoardComponent implements OnInit {
       this.formatMessage(this.senderList);
     });
     this.chat.redirectUser().subscribe(d => {
-      console.log('icoming message');
+      console.log('incoming message');
       if (d && this.authService.currentUserValue.id === d.user_id) {
-        this.senderList.push(d.msg.senderId);
+        this.senderList.push(d.msg.sender);
         d.msg.id = d.msg.message_id;
         this.pushMessage(d.msg);
         this.scroll();
         const audio = new Audio('/assets/sound/notification.mp3');
+        audio.muted = true;
         const playPromise = audio.play();
+        setTimeout(function(){
+          audio.muted = false;
+        },100);
         if (playPromise !== null) {
           playPromise.catch(() => { audio.play(); });
         }

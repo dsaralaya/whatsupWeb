@@ -126,7 +126,7 @@
                     <div *ngIf="!item.from_me"
                         class="align-self-start p-1 my-1 mx-3 rounded bg-white shadow-sm message-item">
                         <div class="small font-weight-bold text-primary">
-                            {{item.sdr_rcv}}
+                            {{item.sdr_rcv ? item.sdr_rcv : item.sender}}
                         </div>
                         <div class="d-flex flex-row">
                             <div class="body m-1 mr-2">{{item.message}}</div>

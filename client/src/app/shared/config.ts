@@ -1,11 +1,11 @@
 // export const configuation = {
-//     serverURL: 'https://wa-chatbotapi.herokuapp.com/api', //http://localhost:3000/api
-//     url:'https://wa-chatbotapi.herokuapp.com/' // http://localhost:3000/
+//     serverURL: 'http://localhost:3000/api',
+//     url:'http://localhost:3000/'
 // };
 
 export const configuation = {
-    serverURL: 'http://localhost:3000/api',
-    url: 'http://localhost:3000/'
+    serverURL: 'http://31.220.50.128/server/api',
+    url: 'http://31.220.50.128/'
 };
 
 export const constants = {
