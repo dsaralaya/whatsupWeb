@@ -4,8 +4,8 @@
 // };
 
 export const configuation = {
-    serverURL: 'http://31.220.50.128/server/api',
-    url: 'http://31.220.50.128/'
+    serverURL: 'http://165.227.81.65:3000/api',
+    url: 'http://165.227.81.65/'
 };
 
 export const constants = {

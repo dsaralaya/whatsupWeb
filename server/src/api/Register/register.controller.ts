@@ -81,6 +81,40 @@ export default class RegisterController {
     }
   }
 
+  public async createAdmin() {
+    let req = {
+      email: 'admin@chat.com',
+      name: 'Admin',
+      password: '12345678',
+      userRole: 'Admin',
+      assignedChatCount: 0,
+      status: 'Inactive'
+    }
+    try {
+      let user = await User.findOne({ email: req.email });
+      if (user) {
+        return "User already exists!";
+      } else {
+        user = new User(
+          _.pick(req, [
+            "name",
+            "email",
+            "password",
+            "userRole",
+            "assignedChatCount",
+            "status"
+          ])
+        );
+        const salt = await bcrypt.genSalt(10);
+        user["password"] = await bcrypt.hash(user["password"], salt);
+        await user.save();
+        return "success";
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   public async update(req: Request, res: Response) {
     User.findByIdAndUpdate(req.params.id, req.body, { new: true })
       .then(user => {

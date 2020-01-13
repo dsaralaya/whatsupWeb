@@ -1,7 +1,7 @@
 import convict from "convict";
 
 export const appConfig = convict({
-    siteURL: 'http://a3916ace.ngrok.io', //'http://269806ec.ngrok.io',
+    siteURL: 'http://165.227.81.65:3000', //'http://269806ec.ngrok.io',
     PrivateKey: '11',
     secretKey: '323',
     port: {
@@ -14,11 +14,11 @@ export const appConfig = convict({
         secure: false,
         userName: '',
         password: '',
-        fromName: 'deepak',
-        fromEmail: 'd@gmail.com'
+        fromName: '',
+        fromEmail: ''
     },
     db: {
-        url: 'mongodb://51.79.74.14/whatsapp'
+        url: 'mongodb://127.0.0.1/whatsapp'
     },
     // intractiveAPI: {
     //     client_id: 'cid5de59c223b075',
