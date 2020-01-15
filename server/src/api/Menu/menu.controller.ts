@@ -70,7 +70,14 @@ export default class MenuController {
         statusCode: "400"
       });
     } else {
-      req.body['file'] = req.file ? req.file.filename : '';
+      if(req.files && req.files.length>0) {
+        var fileList = ''; 
+        req.files.forEach(file => {
+          fileList += file.filename + ',';
+        });
+      }
+      req.body['file'] = req.files ? fileList : '';
+      //req.body['file'] = req.file ? req.file.filename : '';
       let menu = new Menu(_.pick(req.body, [
         "menuId",
         "menuType",
