@@ -8,8 +8,8 @@
                 <img alt="Profile Photo" class="img-fluid rounded-circle mr-2" style="height:50px; cursor:pointer;"
                     onclick="showProfileSettings()" id="display-pic" src="/assets/images/user-icons/man-0.png">
                 <div class="text-white font-weight-bold" id="username">Me</div>
-                &nbsp;&nbsp;&nbsp;
-                <a class="add-contact" href="javascript:void(0)" (click)="showContacts = !showContacts"><i class="fas fa-plus text-white"></i></a>
+                <!-- &nbsp;&nbsp;&nbsp;
+                <a class="add-contact" href="javascript:void(0)" (click)="showContacts = !showContacts"><i class="fas fa-plus text-white"></i></a> -->
                 <div class="nav-item dropdown ml-auto">
                     <a class="nav-link dropdown-toggle" (click)="toggle=!toggle" data-toggle="dropdown"
                         href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false"><i
@@ -22,14 +22,16 @@
                 </div>
                 
             </div>
-            <div *ngIf="showContacts">
+            <!-- <div *ngIf="showContacts"> -->
+                <div>
                     <br/>
             <ng-select [items]="contacts" [typeahead]="newContact" [addTag]="true" [searchable]="true" [searchFn]="customSearchFn" [closeOnSelect]="true" (change)="addContact($event)" bindLabel="name" bindValue="number" name="contact" placeholder="Type to search contact">
                 </ng-select>
                 <br/>
             </div>
             <!-- Chat List -->
-            <div class="row" id="chat-list" style="overflow:auto;">
+            <div class="row" id="chat-list" style="overflow-y: auto;
+            height: 470px;">
                 <div *ngFor="let item of chatbox"
                     class="chat-list-item d-flex flex-row w-100 p-2 border-bottom {{item.sender==activatedSender?'active':''}}"
                     (click)="getMessages(item)">
