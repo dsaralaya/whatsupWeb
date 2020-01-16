@@ -112,11 +112,11 @@ export default class ChatController {
 
                 }
             } else if (menu['endBotReply'] !== 'yes') {
-                var invalidOption = { body: { return: true, type: "text", message: 'The option you entered is invalid. Please enter a valid option from above.', sender: sender } }
+                var invalidOption = { body: { return: true, type: "text", message: 'Opção inválida, verifique a opção digitada e tente novamente!', sender: sender } }
                 await this.sendMessage(invalidOption, '');
             }
         } else if (!menu) {
-            var invalidOption = { body: { return: true, type: "text", message: 'The option you entered is invalid. Please enter a valid option from above.', sender: sender } }
+            var invalidOption = { body: { return: true, type: "text", message: 'Opção inválida, verifique a opção digitada e tente novamente!', sender: sender } }
             await this.sendMessage(invalidOption, '');
         }
 
