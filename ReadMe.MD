@@ -100,11 +100,12 @@ Mongo DB (Ur IP and default port 27017)
     => Client Code
         cd Client
 
+        => Run `npm install`
         => Run `npm run build` command in the client folder which will create a dist folder
     
     => Server Code
         cd Server
-
+        => Run `npm install`
         => Run `npm run build` command in the server folder which will create a dist folder
 
 # To Run the client in browser we need to install nginx (For more details visit https://www.terlici.com/2015/04/20/hosting-deploying-nodejs-centos.html)
