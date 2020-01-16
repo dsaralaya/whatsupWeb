@@ -332,4 +332,17 @@ Mongo DB (Ur IP and default port 27017)
 
          Change http://165.227.81.65 to your vps ip
 
+# To Translate Language
+
+    => We need to just use the client folder
+    => cd into client/src/app
+    => To change Admin Login Languages go into admin folder
+        => U will find different pages as folder names
+        => Open any folder,open .html file and change the language as needed
+        => Example contacts folder then open file contacts.component.html
+        => Once changed deploy to client folder
+        => Run `npm run build` to build the client(UI)
+        => restart nginx
+    => To change login/chat-board Pages open them as above and edit and follow the same steps
+
 

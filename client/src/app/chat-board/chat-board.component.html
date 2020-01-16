@@ -30,8 +30,7 @@
                 <br/>
             </div>
             <!-- Chat List -->
-            <div class="row" id="chat-list" style="overflow-y: auto;
-            height: 470px;">
+            <div class="{{chatbox.length > 7 ? 'row add-scroll' : 'row'}}" id="chat-list">
                 <div *ngFor="let item of chatbox"
                     class="chat-list-item d-flex flex-row w-100 p-2 border-bottom {{item.sender==activatedSender?'active':''}}"
                     (click)="getMessages(item)">
