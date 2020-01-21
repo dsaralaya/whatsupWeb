@@ -86,6 +86,13 @@ Mongo DB (Ur IP and default port 27017)
 
         =>  Replace http://165.227.81.65 with Your Server Ip
 
+        => To set SocketIoConfig Url
+
+            => cd into client/src/app.module.ts
+            => In this file find :  
+                const config: SocketIoConfig = { url: 'http://165.227.81.65/', options: {} };
+            => Replace http://165.227.81.65 with ur server ip
+
     => Server Side
         Server/src/config/appConfig.ts
 
@@ -332,6 +339,10 @@ Mongo DB (Ur IP and default port 27017)
          http://165.227.81.65/server/api/chat/receive
 
          Change http://165.227.81.65 to your vps ip
+
+# To create a initial user to log in :
+
+    => http://68.183.37.187/server/api/register/addadmin (Run this in browser. change ip to ur ip address)
 
 # To Translate Language
 
